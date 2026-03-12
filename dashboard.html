@@ -1,0 +1,1697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SenseGrid — Smart Cushion Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════
+   CSS RESET & BASE
+   ═══════════════════════════════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-base: #F7F5F0;
+  --bg-card: #EDEAE4;
+  --bg-card-hover: #E5E1DA;
+  --border: #D4CFC6;
+  --border-light: #E0DCD5;
+  --text-primary: #1A1A18;
+  --text-secondary: #6B6560;
+  --text-tertiary: #9B9590;
+  --pressure-0: #E8DFD0;
+  --pressure-1: #F2C94C;
+  --pressure-2: #F2A93B;
+  --pressure-3: #E5703C;
+  --pressure-4: #E5503C;
+  --pressure-5: #B91C3A;
+  --motor-blue: #1B7FE3;
+  --motor-blue-light: rgba(27, 127, 227, 0.15);
+  --motor-blue-glow: rgba(27, 127, 227, 0.4);
+  --alert-glow: rgba(185, 28, 58, 0.35);
+  --accent-green: #2D9D6A;
+  --accent-orange: #E5873C;
+  --font-heading: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --transition-fast: 150ms ease;
+  --transition-med: 300ms ease;
+  --transition-slow: 600ms ease;
+}
+
+html, body {
+  height: 100%;
+  font-family: var(--font-heading);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  overflow: hidden;
+}
+
+/* Subtle noise texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ═══════════════════════════════════════════════════════
+   HEADER
+   ═══════════════════════════════════════════════════════ */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 24px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(247, 245, 240, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  height: 52px;
+  position: relative;
+  z-index: 100;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, var(--motor-blue), #1565C0);
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.app-name {
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: -0.3px;
+}
+
+.header-center {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-weight: 400;
+}
+
+.session-timer {
+  background: var(--bg-card);
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+}
+
+.scenario-badge {
+  background: var(--bg-card);
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+  cursor: default;
+  transition: background var(--transition-fast);
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-green);
+  animation: statusPulse 2s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.status-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.scenario-select {
+  font-family: var(--font-heading);
+  font-size: 12px;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  cursor: pointer;
+  outline: none;
+}
+
+.scenario-select:hover {
+  background: var(--bg-card-hover);
+}
+
+/* ═══════════════════════════════════════════════════════
+   MAIN LAYOUT
+   ═══════════════════════════════════════════════════════ */
+.main {
+  display: grid;
+  grid-template-columns: 200px 1fr 220px;
+  grid-template-rows: 1fr auto;
+  height: calc(100vh - 52px);
+  gap: 0;
+}
+
+/* ═══════════════════════════════════════════════════════
+   LEFT SIDEBAR — ZONE CARDS
+   ═══════════════════════════════════════════════════════ */
+.sidebar-left {
+  border-right: 1px solid var(--border);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow-y: auto;
+  grid-row: 1 / 3;
+}
+
+.sidebar-title {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-tertiary);
+  padding: 4px 6px;
+  margin-bottom: 2px;
+}
+
+.zone-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.zone-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+  background: var(--pressure-0);
+  transition: background var(--transition-med);
+}
+
+.zone-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border);
+  transform: translateX(2px);
+}
+
+.zone-card.expanded {
+  background: var(--bg-card-hover);
+}
+
+.zone-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.zone-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.zone-value {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.zone-card:hover .zone-value,
+.zone-card.expanded .zone-value {
+  opacity: 1;
+}
+
+.zone-sparkline {
+  margin-top: 6px;
+  height: 24px;
+  width: 100%;
+}
+
+.zone-sparkline canvas {
+  width: 100%;
+  height: 100%;
+  border-radius: 3px;
+}
+
+.zone-detail {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 300ms ease, margin-top 300ms ease;
+  margin-top: 0;
+}
+
+.zone-card.expanded .zone-detail {
+  max-height: 80px;
+  margin-top: 8px;
+}
+
+.zone-detail-inner {
+  font-size: 11px;
+  color: var(--text-secondary);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+
+.zone-detail-item {
+  display: flex;
+  justify-content: space-between;
+}
+
+.zone-detail-label {
+  color: var(--text-tertiary);
+}
+
+.zone-detail-val {
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+/* ═══════════════════════════════════════════════════════
+   CENTER — CUSHION VISUALIZATION
+   ═══════════════════════════════════════════════════════ */
+.center-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+  grid-row: 1 / 2;
+  min-height: 0;
+}
+
+.cushion-container {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  aspect-ratio: 5 / 4;
+}
+
+.cushion-svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Zone hover tooltip */
+.zone-tooltip {
+  position: absolute;
+  background: rgba(26, 26, 24, 0.9);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-family: var(--font-mono);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  z-index: 50;
+  white-space: nowrap;
+  backdrop-filter: blur(8px);
+}
+
+.zone-tooltip.visible {
+  opacity: 1;
+}
+
+/* Pressure legend under cushion */
+.pressure-legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.legend-gradient {
+  width: 140px;
+  height: 10px;
+  border-radius: 5px;
+  background: linear-gradient(to right, #E8DFD0, #F2C94C, #F2A93B, #E5703C, #E5503C, #B91C3A);
+  border: 1px solid var(--border);
+}
+
+.legend-motor {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 16px;
+}
+
+.legend-motor-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--motor-blue);
+  position: relative;
+}
+
+.legend-motor-dot::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1.5px solid var(--motor-blue);
+  opacity: 0.4;
+}
+
+/* ═══════════════════════════════════════════════════════
+   RIGHT SIDEBAR — MOTOR CONTROLS
+   ═══════════════════════════════════════════════════════ */
+.sidebar-right {
+  border-left: 1px solid var(--border);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  grid-row: 1 / 3;
+}
+
+.motor-group {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 12px;
+}
+
+.motor-group-title {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-tertiary);
+  margin-bottom: 10px;
+}
+
+.motor-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+
+.motor-btn {
+  aspect-ratio: 1;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  background: var(--bg-base);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.motor-btn:hover {
+  border-color: var(--motor-blue);
+  background: var(--motor-blue-light);
+}
+
+.motor-btn.active {
+  border-color: var(--motor-blue);
+  background: var(--motor-blue-light);
+  box-shadow: 0 0 10px var(--motor-blue-glow);
+}
+
+.motor-btn-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: all var(--transition-fast);
+}
+
+.motor-btn.active .motor-btn-dot {
+  background: var(--motor-blue);
+  box-shadow: 0 0 6px var(--motor-blue);
+}
+
+.motor-btn-label {
+  position: absolute;
+  bottom: 2px;
+  font-size: 8px;
+  font-family: var(--font-mono);
+  color: var(--text-tertiary);
+}
+
+/* Threshold control */
+.threshold-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 12px;
+}
+
+.threshold-title {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-tertiary);
+  margin-bottom: 8px;
+}
+
+.threshold-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.threshold-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(to right, var(--pressure-2), var(--pressure-5));
+  outline: none;
+}
+
+.threshold-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid var(--pressure-4);
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+
+.threshold-val {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  min-width: 32px;
+  text-align: right;
+  color: var(--text-secondary);
+}
+
+/* Stats card */
+.stats-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 12px;
+}
+
+.stats-title {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-tertiary);
+  margin-bottom: 8px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-val {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.stat-label {
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   BOTTOM — TIMELINE DRAWER
+   ═══════════════════════════════════════════════════════ */
+.timeline-drawer {
+  grid-column: 2 / 3;
+  border-top: 1px solid var(--border);
+  background: var(--bg-card);
+  overflow: hidden;
+  transition: height 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  height: 36px;
+}
+
+.timeline-drawer.expanded {
+  height: 180px;
+}
+
+.timeline-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  cursor: pointer;
+  user-select: none;
+  height: 36px;
+}
+
+.timeline-header:hover {
+  background: var(--bg-card-hover);
+}
+
+.timeline-toggle {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.timeline-arrow {
+  transition: transform var(--transition-med);
+  font-size: 10px;
+}
+
+.timeline-drawer.expanded .timeline-arrow {
+  transform: rotate(180deg);
+}
+
+.timeline-canvas-wrap {
+  padding: 0 16px 12px;
+  height: 144px;
+}
+
+.timeline-canvas-wrap canvas {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-sm);
+}
+
+/* ═══════════════════════════════════════════════════════
+   SVG STYLES
+   ═══════════════════════════════════════════════════════ */
+.cushion-body {
+  fill: var(--pressure-0);
+  stroke: var(--border);
+  stroke-width: 2;
+  transition: fill var(--transition-med);
+}
+
+.fsr-zone {
+  fill: var(--pressure-0);
+  stroke: var(--border);
+  stroke-width: 0.8;
+  transition: fill var(--transition-med);
+  cursor: pointer;
+}
+
+.fsr-zone:hover {
+  stroke: var(--text-secondary);
+  stroke-width: 1.5;
+}
+
+.fsr-zone.alert-glow {
+  animation: alertBreath 2s ease-in-out infinite alternate;
+}
+
+@keyframes alertBreath {
+  0% { filter: drop-shadow(0 0 4px var(--alert-glow)); }
+  100% { filter: drop-shadow(0 0 14px var(--alert-glow)); }
+}
+
+.motor-dot {
+  fill: var(--border);
+  cursor: pointer;
+  transition: fill var(--transition-fast);
+}
+
+.motor-dot:hover {
+  fill: var(--motor-blue);
+}
+
+.motor-dot.active {
+  fill: var(--motor-blue);
+}
+
+.motor-ring {
+  fill: none;
+  stroke: var(--motor-blue);
+  stroke-width: 1.5;
+  opacity: 0;
+}
+
+.motor-ring.active {
+  animation: motorRipple 1.4s ease-out infinite;
+}
+
+.motor-ring.active.ring2 {
+  animation-delay: 0.4s;
+}
+
+@keyframes motorRipple {
+  0% { r: 6; opacity: 0.7; stroke-width: 2; }
+  100% { r: 18; opacity: 0; stroke-width: 0.5; }
+}
+
+.motor-wobble {
+  transform-origin: center;
+}
+
+.motor-wobble.active {
+  animation: wobble 0.3s ease-in-out infinite alternate;
+}
+
+@keyframes wobble {
+  0% { transform: translate(-0.5px, 0); }
+  100% { transform: translate(0.5px, 0); }
+}
+
+/* zone labels inside SVG */
+.zone-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 9px;
+  font-weight: 500;
+  fill: var(--text-secondary);
+  text-anchor: middle;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.motor-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7px;
+  font-weight: 500;
+  fill: var(--text-tertiary);
+  text-anchor: middle;
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════════════════
+   ANIMATIONS & UTILITY
+   ═══════════════════════════════════════════════════════ */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 500ms ease forwards;
+}
+
+.stagger-1 { animation-delay: 50ms; }
+.stagger-2 { animation-delay: 100ms; }
+.stagger-3 { animation-delay: 150ms; }
+.stagger-4 { animation-delay: 200ms; }
+.stagger-5 { animation-delay: 250ms; }
+.stagger-6 { animation-delay: 300ms; }
+.stagger-7 { animation-delay: 350ms; }
+.stagger-8 { animation-delay: 400ms; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header class="header">
+  <div class="header-left">
+    <div class="logo">S</div>
+    <span class="app-name">SenseGrid</span>
+  </div>
+  <div class="header-center">
+    <div class="session-timer" id="sessionTimer">00:00:00</div>
+    <div class="scenario-badge" id="scenarioBadge">Initializing…</div>
+  </div>
+  <div class="header-right">
+    <div class="status-dot"></div>
+    <span class="status-label">Mock Mode</span>
+    <select class="scenario-select" id="scenarioSelect">
+      <option value="auto">Auto Cycle</option>
+      <option value="empty">Empty Seat</option>
+      <option value="sit_down">Sit Down</option>
+      <option value="normal">Normal Seated</option>
+      <option value="lean_right">Lean Right</option>
+      <option value="lean_left">Lean Left</option>
+      <option value="cross_left">Cross-Legged L</option>
+      <option value="cross_right">Cross-Legged R</option>
+      <option value="prolonged">Prolonged Static</option>
+      <option value="stand_up">Stand Up</option>
+    </select>
+  </div>
+</header>
+
+<!-- ═══════════════ MAIN GRID ═══════════════ -->
+<div class="main">
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="sidebar-left" id="zoneSidebar">
+    <div class="sidebar-title">Pressure Zones</div>
+  </aside>
+
+  <!-- CENTER — CUSHION -->
+  <main class="center-panel">
+    <div class="cushion-container" id="cushionContainer">
+      <svg id="cushionSvg" class="cushion-svg" viewBox="0 0 500 400" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <clipPath id="cushionClip">
+            <rect x="10" y="10" width="480" height="380" rx="16" ry="16"/>
+          </clipPath>
+          <!-- Subtle grid pattern -->
+          <pattern id="gridPattern" width="25" height="25" patternUnits="userSpaceOnUse">
+            <path d="M 25 0 L 0 0 0 25" fill="none" stroke="#D4CFC6" stroke-width="0.3" opacity="0.5"/>
+          </pattern>
+        </defs>
+
+        <!-- Background grid -->
+        <rect x="10" y="10" width="480" height="380" rx="16" ry="16" fill="url(#gridPattern)" stroke="none"/>
+
+        <!-- Cushion body outline -->
+        <rect class="cushion-body" x="10" y="10" width="480" height="380" rx="16" ry="16"/>
+
+        <!-- FSR ZONE PATHS (clipped to cushion) -->
+        <g clip-path="url(#cushionClip)" id="fsrZonesGroup">
+          <!-- Zone 0: Back-Left (left sit-bone) -->
+          <path class="fsr-zone" id="zone0"
+                d="M 10 10 L 250 10 L 250 110 L 10 110 Z"/>
+          <!-- Zone 1: Back-Right (right sit-bone) -->
+          <path class="fsr-zone" id="zone1"
+                d="M 250 10 L 490 10 L 490 110 L 250 110 Z"/>
+          <!-- Zone 2: Mid-Left (left hip) -->
+          <path class="fsr-zone" id="zone2"
+                d="M 10 110 L 170 110 L 170 240 L 10 240 Z"/>
+          <!-- Zone 3: Mid-Center-Left (left thigh) -->
+          <path class="fsr-zone" id="zone3"
+                d="M 170 110 L 250 110 L 250 240 L 170 240 Z"/>
+          <!-- Zone 4: Mid-Center-Right (right thigh) -->
+          <path class="fsr-zone" id="zone4"
+                d="M 250 110 L 330 110 L 330 240 L 250 240 Z"/>
+          <!-- Zone 5: Mid-Right (right hip) -->
+          <path class="fsr-zone" id="zone5"
+                d="M 330 110 L 490 110 L 490 240 L 330 240 Z"/>
+          <!-- Zone 6: Front-Left -->
+          <path class="fsr-zone" id="zone6"
+                d="M 10 240 L 250 240 L 250 390 L 10 390 Z"/>
+          <!-- Zone 7: Front-Right -->
+          <path class="fsr-zone" id="zone7"
+                d="M 250 240 L 490 240 L 490 390 L 250 390 Z"/>
+        </g>
+
+        <!-- Zone boundary lines (subtle) -->
+        <g clip-path="url(#cushionClip)" stroke="#D4CFC6" stroke-width="0.8" fill="none" opacity="0.6">
+          <line x1="250" y1="10" x2="250" y2="390"/>
+          <line x1="10" y1="110" x2="490" y2="110"/>
+          <line x1="10" y1="240" x2="490" y2="240"/>
+          <line x1="170" y1="110" x2="170" y2="240"/>
+          <line x1="330" y1="110" x2="330" y2="240"/>
+        </g>
+
+        <!-- Zone labels -->
+        <g id="zoneLabels">
+          <text class="zone-label" x="130" y="65">Back-L</text>
+          <text class="zone-label" x="370" y="65">Back-R</text>
+          <text class="zone-label" x="90" y="180">Hip-L</text>
+          <text class="zone-label" x="210" y="180">Thigh-L</text>
+          <text class="zone-label" x="290" y="180">Thigh-R</text>
+          <text class="zone-label" x="410" y="180">Hip-R</text>
+          <text class="zone-label" x="130" y="320">Front-L</text>
+          <text class="zone-label" x="370" y="320">Front-R</text>
+        </g>
+
+        <!-- MOTOR INDICATORS -->
+        <g id="motorsGroup" clip-path="url(#cushionClip)">
+          <!-- Square Motors (S0–S4): arranged across mid-section -->
+          <!-- S0: left-back area -->
+          <g class="motor-group-svg" data-motor="0">
+            <circle class="motor-ring ring1" cx="90" cy="60" r="6"/>
+            <circle class="motor-ring ring2" cx="90" cy="60" r="6"/>
+            <g class="motor-wobble"><circle class="motor-dot" cx="90" cy="60" r="5"/></g>
+            <text class="motor-label" x="90" y="76">S0</text>
+          </g>
+          <!-- S1: center-back -->
+          <g class="motor-group-svg" data-motor="1">
+            <circle class="motor-ring ring1" cx="250" cy="60" r="6"/>
+            <circle class="motor-ring ring2" cx="250" cy="60" r="6"/>
+            <g class="motor-wobble"><circle class="motor-dot" cx="250" cy="60" r="5"/></g>
+            <text class="motor-label" x="250" y="76">S1</text>
+          </g>
+          <!-- S2: right-back -->
+          <g class="motor-group-svg" data-motor="2">
+            <circle class="motor-ring ring1" cx="410" cy="60" r="6"/>
+            <circle class="motor-ring ring2" cx="410" cy="60" r="6"/>
+            <g class="motor-wobble"><circle class="motor-dot" cx="410" cy="60" r="5"/></g>
+            <text class="motor-label" x="410" y="76">S2</text>
+          </g>
+          <!-- S3: left-mid -->
+          <g class="motor-group-svg" data-motor="3">
+            <circle class="motor-ring ring1" cx="90" cy="175" r="6"/>
+            <circle class="motor-ring ring2" cx="90" cy="175" r="6"/>
+            <g class="motor-wobble"><circle class="motor-dot" cx="90" cy="175" r="5"/></g>
+            <text class="motor-label" x="90" y="191">S3</text>
+          </g>
+          <!-- S4: right-mid -->
+          <g class="motor-group-svg" data-motor="4">
+            <circle class="motor-ring ring1" cx="410" cy="175" r="6"/>
+            <circle class="motor-ring ring2" cx="410" cy="175" r="6"/>
+            <g class="motor-wobble"><circle class="motor-dot" cx="410" cy="175" r="5"/></g>
+            <text class="motor-label" x="410" y="191">S4</text>
+          </g>
+
+          <!-- Cylindrical Motors (C0–C4): arranged in lower section -->
+          <!-- C0: left-front -->
+          <g class="motor-group-svg" data-motor="5">
+            <circle class="motor-ring ring1" cx="90" cy="310" r="6"/>
+            <circle class="motor-ring ring2" cx="90" cy="310" r="6"/>
+            <g class="motor-wobble"><circle class="motor-dot" cx="90" cy="310" r="5"/></g>
+            <text class="motor-label" x="90" y="326">C0</text>
+          </g>
+          <!-- C1: center-left-front -->
+          <g class="motor-group-svg" data-motor="6">
+            <circle class="motor-ring ring1" cx="190" cy="310" r="6"/>
+            <circle class="motor-ring ring2" cx="190" cy="310" r="6"/>
+            <g class="motor-wobble"><circle class="motor-dot" cx="190" cy="310" r="5"/></g>
+            <text class="motor-label" x="190" y="326">C1</text>
+          </g>
+          <!-- C2: center-front -->
+          <g class="motor-group-svg" data-motor="7">
+            <circle class="motor-ring ring1" cx="250" cy="175" r="6"/>
+            <circle class="motor-ring ring2" cx="250" cy="175" r="6"/>
+            <g class="motor-wobble"><circle class="motor-dot" cx="250" cy="175" r="5"/></g>
+            <text class="motor-label" x="250" y="191">C2</text>
+          </g>
+          <!-- C3: center-right-front -->
+          <g class="motor-group-svg" data-motor="8">
+            <circle class="motor-ring ring1" cx="310" cy="310" r="6"/>
+            <circle class="motor-ring ring2" cx="310" cy="310" r="6"/>
+            <g class="motor-wobble"><circle class="motor-dot" cx="310" cy="310" r="5"/></g>
+            <text class="motor-label" x="310" y="326">C3</text>
+          </g>
+          <!-- C4: right-front -->
+          <g class="motor-group-svg" data-motor="9">
+            <circle class="motor-ring ring1" cx="410" cy="310" r="6"/>
+            <circle class="motor-ring ring2" cx="410" cy="310" r="6"/>
+            <g class="motor-wobble"><circle class="motor-dot" cx="410" cy="310" r="5"/></g>
+            <text class="motor-label" x="410" y="326">C4</text>
+          </g>
+        </g>
+      </svg>
+      <!-- Tooltip -->
+      <div class="zone-tooltip" id="zoneTooltip"></div>
+    </div>
+
+    <!-- Pressure Legend -->
+    <div class="pressure-legend">
+      <span>Low</span>
+      <div class="legend-gradient"></div>
+      <span>High</span>
+      <div class="legend-motor">
+        <div class="legend-motor-dot"></div>
+        <span>Motor</span>
+      </div>
+    </div>
+  </main>
+
+  <!-- RIGHT SIDEBAR -->
+  <aside class="sidebar-right">
+    <div class="sidebar-title">Motor Controls</div>
+
+    <div class="motor-group">
+      <div class="motor-group-title">Square (S0–S4)</div>
+      <div class="motor-grid" id="squareMotorGrid"></div>
+    </div>
+
+    <div class="motor-group">
+      <div class="motor-group-title">Cylindrical (C0–C4)</div>
+      <div class="motor-grid" id="cylMotorGrid"></div>
+    </div>
+
+    <div class="threshold-card">
+      <div class="threshold-title">Alert Threshold</div>
+      <div class="threshold-row">
+        <input type="range" class="threshold-slider" id="thresholdSlider" min="400" max="900" value="700" step="10">
+        <span class="threshold-val" id="thresholdVal">700</span>
+      </div>
+    </div>
+
+    <div class="stats-card">
+      <div class="stats-title">Session Stats</div>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-val" id="statAvg">0</div>
+          <div class="stat-label">Avg Pressure</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val" id="statPeak">0</div>
+          <div class="stat-label">Peak</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val" id="statAlerts">0</div>
+          <div class="stat-label">Alerts</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val" id="statMotors">0</div>
+          <div class="stat-label">Motors Active</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- BOTTOM TIMELINE -->
+  <div class="timeline-drawer" id="timelineDrawer">
+    <div class="timeline-header" id="timelineToggle">
+      <div class="timeline-toggle">
+        <span class="timeline-arrow">▼</span>
+        Pressure Timeline
+      </div>
+      <span style="font-size:11px;color:var(--text-tertiary)">Last 30s</span>
+    </div>
+    <div class="timeline-canvas-wrap">
+      <canvas id="timelineCanvas"></canvas>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     JAVASCRIPT
+     ═══════════════════════════════════════════════════════ -->
+<script>
+(function() {
+'use strict';
+
+/* ─── CONFIGURATION ─── */
+const ZONE_NAMES = [
+  'Back-Left', 'Back-Right',
+  'Hip-Left', 'Thigh-Left', 'Thigh-Right', 'Hip-Right',
+  'Front-Left', 'Front-Right'
+];
+
+const ZONE_COLORS = [
+  [232,223,208], // 0: cream (#E8DFD0)
+  [242,201,76],  // 1: yellow (#F2C94C)
+  [242,169,59],  // 2: amber (#F2A93B)
+  [229,112,60],  // 3: orange (#E5703C)
+  [229,80,60],   // 4: vermillion (#E5503C)
+  [185,28,58]    // 5: crimson (#B91C3A)
+];
+
+const MOTOR_LABELS = ['S0','S1','S2','S3','S4','C0','C1','C2','C3','C4'];
+
+const SPARKLINE_HISTORY = 60; // data points per zone sparkline
+const TIMELINE_HISTORY = 300; // 30s at 10Hz
+
+/* ─── STATE ─── */
+const state = {
+  fsr: new Float32Array(8),           // current interpolated values
+  fsrTarget: new Float32Array(8),     // target values from data source
+  fsrPrev: new Float32Array(8),       // previous tick values
+  motors: new Uint8Array(10),         // current motor states
+  motorManual: new Uint8Array(10),    // manually toggled motors
+  threshold: 700,
+  alertCount: 0,
+  sessionStart: Date.now(),
+  sparklines: Array.from({length: 8}, () => []),
+  timeline: Array.from({length: 8}, () => []),
+  interpT: 0,
+  expandedZone: -1
+};
+
+/* ─── DATA SOURCE INTERFACE ─── */
+class DataSource {
+  constructor(onData) { this.onData = onData; }
+  start() {}
+  stop() {}
+  destroy() {}
+}
+
+/* ─── MOCK DATA SOURCE ─── */
+class MockDataSource extends DataSource {
+  constructor(onData) {
+    super(onData);
+    this._interval = null;
+    this._scenarioIndex = 0;
+    this._scenarioTimer = 0;
+    this._manualScenario = null;
+    this._currentProfile = new Float32Array(8);
+    this._targetProfile = new Float32Array(8);
+    this._profileT = 0;
+  }
+
+  get scenarios() {
+    return [
+      { name: 'empty',       label: 'Empty Seat',      duration: 3000, fsr: [0,0,0,0,0,0,0,0],                        motors: [0,0,0,0,0,0,0,0,0,0] },
+      { name: 'sit_down',    label: 'Sitting Down',     duration: 2500, fsr: [520,500,280,350,340,270,180,170],         motors: [0,0,0,0,0,0,0,0,0,0] },
+      { name: 'normal',      label: 'Normal Seated',    duration: 5000, fsr: [580,570,380,420,410,370,290,280],         motors: [0,0,0,0,0,0,0,0,0,0] },
+      { name: 'lean_right',  label: 'Leaning Right',    duration: 4000, fsr: [380,720,220,300,580,520,190,450],         motors: [0,0,1,0,1,0,0,0,1,1] },
+      { name: 'lean_left',   label: 'Leaning Left',     duration: 4000, fsr: [720,380,520,580,300,220,450,190],         motors: [1,0,0,1,0,1,1,0,0,0] },
+      { name: 'cross_left',  label: 'Cross-Legged Left',duration: 4500, fsr: [440,650,180,220,560,480,120,420],         motors: [0,0,1,0,1,1,0,0,1,0] },
+      { name: 'cross_right', label: 'Cross-Legged Right',duration:4500, fsr: [650,440,480,560,220,180,420,120],         motors: [1,0,0,1,0,0,0,1,0,1] },
+      { name: 'prolonged',   label: 'Prolonged Static',  duration: 5500, fsr: [820,810,480,550,540,470,380,370],        motors: [1,1,1,0,0,0,0,1,0,0] },
+      { name: 'stand_up',    label: 'Standing Up',       duration: 2500, fsr: [60,50,30,40,35,25,20,15],               motors: [0,0,0,0,0,0,0,0,0,0] },
+    ];
+  }
+
+  setScenario(name) {
+    this._manualScenario = name === 'auto' ? null : name;
+    if (name !== 'auto') {
+      const sc = this.scenarios.find(s => s.name === name);
+      if (sc) {
+        this._transitionTo(sc);
+        this._scenarioTimer = 0;
+      }
+    }
+  }
+
+  _transitionTo(scenario) {
+    for (let i = 0; i < 8; i++) {
+      this._currentProfile[i] = state.fsrTarget[i];
+      this._targetProfile[i] = scenario.fsr[i];
+    }
+    this._profileT = 0;
+    this._activeScenario = scenario;
+  }
+
+  start() {
+    const sc = this.scenarios[0];
+    this._activeScenario = sc;
+    for (let i = 0; i < 8; i++) {
+      this._currentProfile[i] = sc.fsr[i];
+      this._targetProfile[i] = sc.fsr[i];
+    }
+    this._profileT = 1;
+    this._scenarioIndex = 0;
+    this._scenarioTimer = 0;
+
+    this._interval = setInterval(() => this._tick(), 100); // 10 Hz
+  }
+
+  _tick() {
+    const sc = this._activeScenario;
+
+    // Auto-cycle logic
+    if (!this._manualScenario) {
+      this._scenarioTimer += 100;
+      if (this._scenarioTimer >= sc.duration) {
+        this._scenarioTimer = 0;
+        this._scenarioIndex = (this._scenarioIndex + 1) % this.scenarios.length;
+        this._transitionTo(this.scenarios[this._scenarioIndex]);
+      }
+    }
+
+    // Smooth transition between profiles
+    this._profileT = Math.min(1, this._profileT + 0.06);
+    const ease = this._profileT < 0.5
+      ? 4 * this._profileT * this._profileT * this._profileT
+      : 1 - Math.pow(-2 * this._profileT + 2, 3) / 2;
+
+    const fsr = new Float32Array(8);
+    for (let i = 0; i < 8; i++) {
+      const base = this._currentProfile[i] + (this._targetProfile[i] - this._currentProfile[i]) * ease;
+      // Add subtle noise for realism
+      const noise = (Math.random() - 0.5) * 20;
+      fsr[i] = Math.max(0, Math.min(1023, base + noise));
+    }
+
+    const motors = new Uint8Array(sc.motors);
+
+    this.onData({
+      timestamp: Date.now(),
+      fsr: Array.from(fsr),
+      motors: Array.from(motors),
+      scenario: sc.label
+    });
+  }
+
+  stop() { clearInterval(this._interval); }
+  destroy() { this.stop(); }
+}
+
+/* ─── PRESSURE COLOR INTERPOLATION ─── */
+function pressureToColor(value) {
+  const t = Math.max(0, Math.min(1, value / 1023));
+  // Multi-stop gradient: 0→cream, 0.2→yellow, 0.4→amber, 0.6→orange, 0.8→vermillion, 1.0→crimson
+  const stops = [0, 0.2, 0.4, 0.6, 0.8, 1.0];
+  let i = 0;
+  for (; i < stops.length - 1; i++) {
+    if (t <= stops[i + 1]) break;
+  }
+  i = Math.min(i, ZONE_COLORS.length - 2);
+  const local = (t - stops[i]) / (stops[i + 1] - stops[i]);
+  const c0 = ZONE_COLORS[i], c1 = ZONE_COLORS[i + 1];
+  const r = Math.round(c0[0] + (c1[0] - c0[0]) * local);
+  const g = Math.round(c0[1] + (c1[1] - c0[1]) * local);
+  const b = Math.round(c0[2] + (c1[2] - c0[2]) * local);
+  return `rgb(${r},${g},${b})`;
+}
+
+/* ─── DOM REFERENCES ─── */
+const $timer = document.getElementById('sessionTimer');
+const $scenarioBadge = document.getElementById('scenarioBadge');
+const $scenarioSelect = document.getElementById('scenarioSelect');
+const $thresholdSlider = document.getElementById('thresholdSlider');
+const $thresholdVal = document.getElementById('thresholdVal');
+const $statAvg = document.getElementById('statAvg');
+const $statPeak = document.getElementById('statPeak');
+const $statAlerts = document.getElementById('statAlerts');
+const $statMotors = document.getElementById('statMotors');
+const $timelineDrawer = document.getElementById('timelineDrawer');
+const $timelineToggle = document.getElementById('timelineToggle');
+const $timelineCanvas = document.getElementById('timelineCanvas');
+const $tooltip = document.getElementById('zoneTooltip');
+const $cushionContainer = document.getElementById('cushionContainer');
+const $zoneSidebar = document.getElementById('zoneSidebar');
+
+const $zones = [];
+const $motorGroups = [];
+const $motorBtns = [];
+const $sparklineCanvases = [];
+
+/* ─── BUILD ZONE CARDS ─── */
+function buildZoneCards() {
+  ZONE_NAMES.forEach((name, i) => {
+    const card = document.createElement('div');
+    card.className = `zone-card fade-in stagger-${i + 1}`;
+    card.innerHTML = `
+      <div class="zone-card-header">
+        <span class="zone-name">${name}</span>
+        <span class="zone-value" id="zoneVal${i}">0</span>
+      </div>
+      <div class="zone-sparkline">
+        <canvas id="sparkline${i}"></canvas>
+      </div>
+      <div class="zone-detail">
+        <div class="zone-detail-inner">
+          <div class="zone-detail-item">
+            <span class="zone-detail-label">Min</span>
+            <span class="zone-detail-val" id="zoneMin${i}">0</span>
+          </div>
+          <div class="zone-detail-item">
+            <span class="zone-detail-label">Max</span>
+            <span class="zone-detail-val" id="zoneMax${i}">0</span>
+          </div>
+          <div class="zone-detail-item">
+            <span class="zone-detail-label">Avg</span>
+            <span class="zone-detail-val" id="zoneAvg${i}">0</span>
+          </div>
+          <div class="zone-detail-item">
+            <span class="zone-detail-label">Trend</span>
+            <span class="zone-detail-val" id="zoneTrend${i}">—</span>
+          </div>
+        </div>
+      </div>
+    `;
+    card.addEventListener('click', () => {
+      if (state.expandedZone === i) {
+        card.classList.remove('expanded');
+        state.expandedZone = -1;
+      } else {
+        document.querySelectorAll('.zone-card.expanded').forEach(c => c.classList.remove('expanded'));
+        card.classList.add('expanded');
+        state.expandedZone = i;
+      }
+    });
+    $zoneSidebar.appendChild(card);
+  });
+}
+
+/* ─── BUILD MOTOR BUTTONS ─── */
+function buildMotorButtons() {
+  const sqGrid = document.getElementById('squareMotorGrid');
+  const cylGrid = document.getElementById('cylMotorGrid');
+
+  for (let i = 0; i < 10; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'motor-btn';
+    btn.innerHTML = `<div class="motor-btn-dot"></div><span class="motor-btn-label">${MOTOR_LABELS[i]}</span>`;
+    btn.addEventListener('click', () => {
+      state.motorManual[i] = state.motorManual[i] ? 0 : 1;
+      updateMotorVisuals();
+    });
+    if (i < 5) sqGrid.appendChild(btn);
+    else cylGrid.appendChild(btn);
+    $motorBtns.push(btn);
+  }
+}
+
+/* ─── INIT SVG REFERENCES ─── */
+function initSvgRefs() {
+  for (let i = 0; i < 8; i++) {
+    $zones.push(document.getElementById(`zone${i}`));
+  }
+  document.querySelectorAll('.motor-group-svg').forEach(g => {
+    $motorGroups.push(g);
+  });
+
+  // Sparkline canvases
+  for (let i = 0; i < 8; i++) {
+    const c = document.getElementById(`sparkline${i}`);
+    const dpr = window.devicePixelRatio || 1;
+    const rect = c.getBoundingClientRect();
+    c.width = rect.width * dpr || 160;
+    c.height = rect.height * dpr || 48;
+    $sparklineCanvases.push(c);
+  }
+}
+
+/* ─── ZONE HOVER TOOLTIP ─── */
+function initZoneTooltip() {
+  $zones.forEach((zone, i) => {
+    zone.addEventListener('mouseenter', (e) => {
+      $tooltip.textContent = `${ZONE_NAMES[i]}: ${Math.round(state.fsr[i])}`;
+      $tooltip.classList.add('visible');
+    });
+    zone.addEventListener('mousemove', (e) => {
+      const rect = $cushionContainer.getBoundingClientRect();
+      $tooltip.style.left = (e.clientX - rect.left + 12) + 'px';
+      $tooltip.style.top = (e.clientY - rect.top - 28) + 'px';
+      $tooltip.textContent = `${ZONE_NAMES[i]}: ${Math.round(state.fsr[i])}`;
+    });
+    zone.addEventListener('mouseleave', () => {
+      $tooltip.classList.remove('visible');
+    });
+  });
+}
+
+/* ─── MOTOR CLICK ON SVG ─── */
+function initMotorClickSvg() {
+  $motorGroups.forEach((g, i) => {
+    const dot = g.querySelector('.motor-dot');
+    dot.addEventListener('click', () => {
+      state.motorManual[i] = state.motorManual[i] ? 0 : 1;
+      updateMotorVisuals();
+    });
+  });
+}
+
+/* ─── UPDATE FUNCTIONS ─── */
+function updateZoneFills() {
+  for (let i = 0; i < 8; i++) {
+    const val = state.fsr[i];
+    const color = pressureToColor(val);
+    $zones[i].style.fill = color;
+
+    // Alert glow for zones over threshold
+    if (val > state.threshold) {
+      $zones[i].classList.add('alert-glow');
+    } else {
+      $zones[i].classList.remove('alert-glow');
+    }
+  }
+}
+
+function updateMotorVisuals() {
+  for (let i = 0; i < 10; i++) {
+    const active = state.motors[i] || state.motorManual[i];
+    const g = $motorGroups[i];
+    const rings = g.querySelectorAll('.motor-ring');
+    const dot = g.querySelector('.motor-dot');
+    const wobble = g.querySelector('.motor-wobble');
+
+    rings.forEach(r => {
+      if (active) r.classList.add('active');
+      else r.classList.remove('active');
+    });
+
+    if (active) {
+      dot.classList.add('active');
+      wobble.classList.add('active');
+    } else {
+      dot.classList.remove('active');
+      wobble.classList.remove('active');
+    }
+
+    // Sidebar buttons
+    if ($motorBtns[i]) {
+      if (active) $motorBtns[i].classList.add('active');
+      else $motorBtns[i].classList.remove('active');
+    }
+  }
+}
+
+function updateZoneCards() {
+  for (let i = 0; i < 8; i++) {
+    const val = Math.round(state.fsr[i]);
+    const $val = document.getElementById(`zoneVal${i}`);
+    if ($val) $val.textContent = val;
+
+    // Update color indicator bar
+    const card = $zoneSidebar.querySelectorAll('.zone-card')[i];
+    if (card) {
+      card.style.setProperty('--zone-color', pressureToColor(state.fsr[i]));
+      card.querySelector('::before') ; // CSS handles this via style
+      // Actually set it via inline style on the pseudo-element workaround:
+      card.style.borderLeftColor = pressureToColor(state.fsr[i]);
+    }
+
+    // Sparkline data
+    state.sparklines[i].push(val);
+    if (state.sparklines[i].length > SPARKLINE_HISTORY) state.sparklines[i].shift();
+
+    // Detail stats
+    const arr = state.sparklines[i];
+    if (arr.length > 0) {
+      const min = Math.min(...arr);
+      const max = Math.max(...arr);
+      const avg = Math.round(arr.reduce((a, b) => a + b, 0) / arr.length);
+      const trend = arr.length > 5 ? (arr[arr.length-1] > arr[arr.length-6] ? '↑' : arr[arr.length-1] < arr[arr.length-6] ? '↓' : '→') : '—';
+
+      const $min = document.getElementById(`zoneMin${i}`);
+      const $max = document.getElementById(`zoneMax${i}`);
+      const $avg = document.getElementById(`zoneAvg${i}`);
+      const $trend = document.getElementById(`zoneTrend${i}`);
+      if ($min) $min.textContent = min;
+      if ($max) $max.textContent = max;
+      if ($avg) $avg.textContent = avg;
+      if ($trend) $trend.textContent = trend;
+    }
+  }
+}
+
+function drawSparklines() {
+  for (let i = 0; i < 8; i++) {
+    const canvas = $sparklineCanvases[i];
+    if (!canvas) continue;
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width;
+    const h = canvas.height;
+    const data = state.sparklines[i];
+
+    ctx.clearRect(0, 0, w, h);
+
+    if (data.length < 2) continue;
+
+    // Fill gradient
+    const grad = ctx.createLinearGradient(0, 0, 0, h);
+    grad.addColorStop(0, 'rgba(229, 80, 60, 0.15)');
+    grad.addColorStop(1, 'rgba(232, 223, 208, 0.05)');
+
+    ctx.beginPath();
+    ctx.moveTo(0, h);
+    for (let j = 0; j < data.length; j++) {
+      const x = (j / (SPARKLINE_HISTORY - 1)) * w;
+      const y = h - (data[j] / 1023) * h;
+      ctx.lineTo(x, y);
+    }
+    ctx.lineTo(((data.length - 1) / (SPARKLINE_HISTORY - 1)) * w, h);
+    ctx.closePath();
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // Line
+    ctx.beginPath();
+    for (let j = 0; j < data.length; j++) {
+      const x = (j / (SPARKLINE_HISTORY - 1)) * w;
+      const y = h - (data[j] / 1023) * h;
+      if (j === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = pressureToColor(data[data.length - 1]);
+    ctx.lineWidth = 1.5 * (window.devicePixelRatio || 1);
+    ctx.stroke();
+
+    // Threshold line
+    const ty = h - (state.threshold / 1023) * h;
+    ctx.beginPath();
+    ctx.moveTo(0, ty);
+    ctx.lineTo(w, ty);
+    ctx.strokeStyle = 'rgba(185, 28, 58, 0.25)';
+    ctx.lineWidth = 1 * (window.devicePixelRatio || 1);
+    ctx.setLineDash([4, 4]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+}
+
+function updateTimeline(data) {
+  for (let i = 0; i < 8; i++) {
+    state.timeline[i].push(data.fsr[i]);
+    if (state.timeline[i].length > TIMELINE_HISTORY) state.timeline[i].shift();
+  }
+}
+
+function drawTimeline() {
+  const canvas = $timelineCanvas;
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width;
+  const h = canvas.height;
+
+  ctx.clearRect(0, 0, w, h);
+
+  // Background
+  ctx.fillStyle = 'rgba(237, 234, 228, 0.4)';
+  ctx.fillRect(0, 0, w, h);
+
+  // Grid lines
+  ctx.strokeStyle = 'rgba(212, 207, 198, 0.5)';
+  ctx.lineWidth = 1;
+  for (let v = 0; v <= 1023; v += 256) {
+    const y = h - (v / 1023) * h;
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(w, y);
+    ctx.stroke();
+  }
+
+  // Threshold line
+  const ty = h - (state.threshold / 1023) * h;
+  ctx.beginPath();
+  ctx.moveTo(0, ty);
+  ctx.lineTo(w, ty);
+  ctx.strokeStyle = 'rgba(185, 28, 58, 0.4)';
+  ctx.lineWidth = 1.5 * dpr;
+  ctx.setLineDash([6, 4]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Zone lines
+  const lineColors = [
+    '#C4564A','#D46A3E',
+    '#8B7355','#A08050','#A08050','#8B7355',
+    '#6B8060','#6B8060'
+  ];
+
+  for (let i = 0; i < 8; i++) {
+    const data = state.timeline[i];
+    if (data.length < 2) continue;
+
+    ctx.beginPath();
+    for (let j = 0; j < data.length; j++) {
+      const x = (j / (TIMELINE_HISTORY - 1)) * w;
+      const y = h - (data[j] / 1023) * h;
+      if (j === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = lineColors[i];
+    ctx.lineWidth = 1.2 * dpr;
+    ctx.globalAlpha = 0.7;
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+}
+
+function updateStats() {
+  const values = Array.from(state.fsr);
+  const avg = Math.round(values.reduce((a, b) => a + b, 0) / values.length);
+  const peak = Math.round(Math.max(...values));
+  const alerts = values.filter(v => v > state.threshold).length;
+  const motorsActive = Array.from(state.motors).reduce((a, b) => a + b, 0)
+    + Array.from(state.motorManual).reduce((a, b) => a + b, 0);
+
+  $statAvg.textContent = avg;
+  $statPeak.textContent = peak;
+  $statAlerts.textContent = alerts;
+  $statMotors.textContent = Math.min(10, motorsActive);
+
+  if (alerts > 0) state.alertCount++;
+}
+
+function updateSessionTimer() {
+  const elapsed = Date.now() - state.sessionStart;
+  const s = Math.floor(elapsed / 1000) % 60;
+  const m = Math.floor(elapsed / 60000) % 60;
+  const h = Math.floor(elapsed / 3600000);
+  $timer.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+/* ─── DATA HANDLER ─── */
+function onData(data) {
+  // Store previous and set new targets
+  for (let i = 0; i < 8; i++) {
+    state.fsrPrev[i] = state.fsrTarget[i];
+    state.fsrTarget[i] = data.fsr[i];
+  }
+  state.interpT = 0;
+
+  // Motors
+  for (let i = 0; i < 10; i++) {
+    state.motors[i] = data.motors[i];
+  }
+
+  // Scenario badge
+  $scenarioBadge.textContent = data.scenario;
+
+  // Timeline
+  updateTimeline(data);
+
+  // Stats
+  updateStats();
+
+  // Zone card values
+  updateZoneCards();
+}
+
+/* ─── RENDER LOOP (60fps interpolation) ─── */
+let lastRenderTime = 0;
+function renderLoop(timestamp) {
+  requestAnimationFrame(renderLoop);
+
+  // Interpolate FSR values between ticks (100ms intervals → smooth 60fps)
+  state.interpT = Math.min(1, state.interpT + (timestamp - lastRenderTime) / 100);
+  lastRenderTime = timestamp;
+
+  const ease = state.interpT * state.interpT * (3 - 2 * state.interpT); // smoothstep
+  for (let i = 0; i < 8; i++) {
+    state.fsr[i] = state.fsrPrev[i] + (state.fsrTarget[i] - state.fsrPrev[i]) * ease;
+  }
+
+  updateZoneFills();
+  updateMotorVisuals();
+  drawSparklines();
+  drawTimeline();
+  updateSessionTimer();
+}
+
+/* ─── EVENT HANDLERS ─── */
+function initEvents() {
+  $thresholdSlider.addEventListener('input', (e) => {
+    state.threshold = parseInt(e.target.value);
+    $thresholdVal.textContent = state.threshold;
+  });
+
+  $timelineToggle.addEventListener('click', () => {
+    $timelineDrawer.classList.toggle('expanded');
+  });
+
+  $scenarioSelect.addEventListener('change', (e) => {
+    mockSource.setScenario(e.target.value);
+  });
+}
+
+/* ─── ZONE CARD BORDER COLOR (pseudo-element workaround) ─── */
+// We need to inject a dynamic style for zone card left borders
+function updateZoneCardColors() {
+  const cards = $zoneSidebar.querySelectorAll('.zone-card');
+  cards.forEach((card, i) => {
+    const color = pressureToColor(state.fsr[i] || 0);
+    // Use the ::before pseudo via CSS custom property
+    card.style.setProperty('--zone-indicator', color);
+  });
+}
+
+// Override the ::before to use the CSS variable
+const dynamicStyle = document.createElement('style');
+dynamicStyle.textContent = `.zone-card::before { background: var(--zone-indicator, var(--pressure-0)) !important; }`;
+document.head.appendChild(dynamicStyle);
+
+// Add updateZoneCardColors to the render loop
+const _origRenderLoop = renderLoop;
+
+/* ─── BOOTSTRAP ─── */
+buildZoneCards();
+buildMotorButtons();
+
+// Need to wait for layout before measuring sparkline sizes
+requestAnimationFrame(() => {
+  initSvgRefs();
+  initZoneTooltip();
+  initMotorClickSvg();
+  initEvents();
+
+  // Enhanced render loop with zone card colors
+  function enhancedRenderLoop(timestamp) {
+    requestAnimationFrame(enhancedRenderLoop);
+
+    state.interpT = Math.min(1, state.interpT + (timestamp - lastRenderTime) / 100);
+    lastRenderTime = timestamp;
+
+    const ease = state.interpT * state.interpT * (3 - 2 * state.interpT);
+    for (let i = 0; i < 8; i++) {
+      state.fsr[i] = state.fsrPrev[i] + (state.fsrTarget[i] - state.fsrPrev[i]) * ease;
+    }
+
+    updateZoneFills();
+    updateMotorVisuals();
+    updateZoneCardColors();
+    drawSparklines();
+
+    if ($timelineDrawer.classList.contains('expanded')) {
+      drawTimeline();
+    }
+
+    updateSessionTimer();
+  }
+
+  lastRenderTime = performance.now();
+  requestAnimationFrame(enhancedRenderLoop);
+});
+
+// Start mock data source
+const mockSource = new MockDataSource(onData);
+mockSource.start();
+
+})();
+</script>
+</body>
+</html>

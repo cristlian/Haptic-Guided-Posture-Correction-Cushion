@@ -1,0 +1,21 @@
+# Python virtual environment
+.venv/
+__pycache__/
+*.pyc
+
+# Scratch extraction scripts and outputs
+_extract_*.py
+_analyze_*.py
+_extracted_*.jpeg
+_extracted_*.jpg
+_extracted_*.png
+
+# Personal/admin reference images (not project deliverables)
+competition_req.png
+group_report_req.png
+important_dates.png
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
