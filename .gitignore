@@ -3,17 +3,33 @@
 __pycache__/
 *.pyc
 
-# Scratch extraction scripts and outputs
+# Keep the analysis script, but ignore scratch extraction utilities
 _extract_*.py
 _analyze_*.py
+!_analyze_topview.py
 _extracted_*.jpeg
 _extracted_*.jpg
 _extracted_*.png
 
-# Personal/admin reference images (not project deliverables)
+# Local-only coursework and source materials
+slides/
+group pre/
+individual design idea/
+individual lecture report/
+*.pdf
+*.pptx
+*.bib
+
+# Personal/admin reference images and planning material
 competition_req.png
 group_report_req.png
 important_dates.png
+
+# Copilot-local instructions and bundled assets
+.github/copilot_assets/
+.github/instructions/
+.github/copilot-instructions.md
+.github/workflows/
 
 # OS junk
 .DS_Store
