@@ -1,16 +1,16 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SenseGrid — Smart Cushion Dashboard</title>
+<title>SenseGrid - Smart Cushion Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════════════════════
+/* 鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?
    CSS RESET & BASE
-   ═══════════════════════════════════════════════════════ */
+   鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?*/
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
@@ -22,12 +22,12 @@
   --text-primary: #1A1A18;
   --text-secondary: #6B6560;
   --text-tertiary: #9B9590;
-  --pressure-0: #E8DFD0;
-  --pressure-1: #F2C94C;
-  --pressure-2: #F2A93B;
-  --pressure-3: #E5703C;
-  --pressure-4: #E5503C;
-  --pressure-5: #B91C3A;
+  --pressure-0: #F9F3EC;
+  --pressure-1: #F8D8B5;
+  --pressure-2: #F4A261;
+  --pressure-3: #E76F51;
+  --pressure-4: #C43D3C;
+  --pressure-5: #7A1628;
   --motor-blue: #1B7FE3;
   --motor-blue-light: rgba(27, 127, 227, 0.15);
   --motor-blue-glow: rgba(27, 127, 227, 0.4);
@@ -45,28 +45,15 @@
 }
 
 html, body {
-  height: 100%;
+  min-height: 100%;
   font-family: var(--font-heading);
   background: var(--bg-base);
   color: var(--text-primary);
-  overflow: hidden;
 }
 
-/* Subtle noise texture */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  opacity: 0.03;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 256px 256px;
-  pointer-events: none;
-  z-index: 9999;
-}
-
-/* ═══════════════════════════════════════════════════════
+/* 鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?
    HEADER
-   ═══════════════════════════════════════════════════════ */
+   鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?*/
 .header {
   display: flex;
   align-items: center;
@@ -77,8 +64,24 @@ body::before {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   height: 52px;
-  position: relative;
+  position: sticky;
+  top: 0;
   z-index: 100;
+}
+
+.connect-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  cursor: pointer;
+  font-family: var(--font-heading);
+  font-size: 12px;
+  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.demo-btn {
+  background: var(--bg-card-hover);
 }
 
 .header-left {
@@ -148,20 +151,20 @@ body::before {
   color: var(--text-secondary);
 }
 
-/* ═══════════════════════════════════════════════════════
+/* 鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?
    MAIN LAYOUT
-   ═══════════════════════════════════════════════════════ */
+   鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?*/
 .main {
   display: grid;
   grid-template-columns: 200px 1fr 240px;
   grid-template-rows: 1fr auto;
-  height: calc(100vh - 52px);
+  min-height: calc(100vh - 52px);
   gap: 0;
 }
 
-/* ═══════════════════════════════════════════════════════
-   LEFT SIDEBAR — ZONE CARDS
-   ═══════════════════════════════════════════════════════ */
+/* 鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?
+   LEFT SIDEBAR 鈥?ZONE CARDS
+   鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?*/
 .sidebar-left {
   border-right: 1px solid var(--border);
   padding: 12px;
@@ -232,18 +235,11 @@ body::before {
   font-size: 11px;
   font-weight: 500;
   color: var(--text-secondary);
-  opacity: 0;
-  transition: opacity var(--transition-fast);
-}
-
-.zone-card:hover .zone-value,
-.zone-card.expanded .zone-value {
-  opacity: 1;
 }
 
 .zone-sparkline {
   margin-top: 6px;
-  height: 24px;
+  height: 30px;
   width: 100%;
 }
 
@@ -287,9 +283,9 @@ body::before {
   font-weight: 500;
 }
 
-/* ═══════════════════════════════════════════════════════
-   CENTER — CUSHION VISUALIZATION
-   ═══════════════════════════════════════════════════════ */
+/* 鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?
+   CENTER 鈥?CUSHION VISUALIZATION
+   鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?*/
 .center-panel {
   display: flex;
   flex-direction: column;
@@ -306,6 +302,40 @@ body::before {
   width: 100%;
   max-width: 520px;
   aspect-ratio: 5 / 4;
+}
+
+.connection-overlay {
+  position: absolute;
+  inset: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(249, 243, 236, 0.92), rgba(249, 243, 236, 0.76));
+  color: var(--text-secondary);
+  text-align: center;
+  pointer-events: none;
+  transition: opacity var(--transition-med), transform var(--transition-med);
+}
+
+.connection-overlay.hidden {
+  opacity: 0;
+  transform: scale(0.98);
+}
+
+.connection-overlay-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.connection-overlay-subtitle {
+  max-width: 260px;
+  font-size: 11px;
+  line-height: 1.5;
+  font-family: var(--font-mono);
 }
 
 .cushion-svg {
@@ -348,7 +378,7 @@ body::before {
   width: 140px;
   height: 10px;
   border-radius: 5px;
-  background: linear-gradient(to right, #E8DFD0, #F2C94C, #F2A93B, #E5703C, #E5503C, #B91C3A);
+  background: linear-gradient(to right, #F9F3EC, #F8D8B5, #F4A261, #E76F51, #C43D3C, #7A1628);
   border: 1px solid var(--border);
 }
 
@@ -376,9 +406,9 @@ body::before {
   opacity: 0.4;
 }
 
-/* ═══════════════════════════════════════════════════════
-   RIGHT SIDEBAR — MOTOR CONTROLS
-   ═══════════════════════════════════════════════════════ */
+/* 鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?
+   RIGHT SIDEBAR 鈥?MOTOR CONTROLS
+   鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?*/
 .sidebar-right {
   border-left: 1px solid var(--border);
   padding: 12px;
@@ -407,8 +437,33 @@ body::before {
 
 .motor-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
+  gap: 8px;
+}
+
+.motor-layout-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-areas:
+    "m0 m1 m2"
+    "m3 m4 m5"
+    "m6 . m7";
+}
+
+.motor-btn-0 { grid-area: m0; }
+.motor-btn-1 { grid-area: m1; }
+.motor-btn-2 { grid-area: m2; }
+.motor-btn-3 { grid-area: m3; }
+.motor-btn-4 { grid-area: m4; }
+.motor-btn-5 { grid-area: m5; }
+.motor-btn-6 { grid-area: m6; }
+.motor-btn-7 { grid-area: m7; }
+
+.motor-group-subtitle {
+  margin-top: 8px;
+}
+
+.timeline-meta {
+  font-size: 11px;
+  color: var(--text-tertiary);
 }
 
 .motor-btn {
@@ -547,9 +602,9 @@ body::before {
   margin-top: 2px;
 }
 
-/* ═══════════════════════════════════════════════════════
+/* 鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?
    POSTURE DETECTION CARD
-   ═══════════════════════════════════════════════════════ */
+   鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?*/
 .posture-card {
   background: var(--bg-card);
   border: 1px solid var(--border-light);
@@ -574,8 +629,8 @@ body::before {
 }
 
 .posture-silhouette {
-  width: 64px;
-  height: 88px;
+  width: 92px;
+  height: 126px;
   transition: transform 600ms ease;
 }
 
@@ -680,9 +735,9 @@ body::before {
   padding: 3px 8px;
 }
 
-/* ═══════════════════════════════════════════════════════
-   BOTTOM — TIMELINE DRAWER
-   ═══════════════════════════════════════════════════════ */
+/* 鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?
+   BOTTOM 鈥?TIMELINE DRAWER
+   鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?*/
 .timeline-drawer {
   grid-column: 2 / 3;
   border-top: 1px solid var(--border);
@@ -739,9 +794,9 @@ body::before {
   border-radius: var(--radius-sm);
 }
 
-/* ═══════════════════════════════════════════════════════
+/* 鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?
    SVG STYLES
-   ═══════════════════════════════════════════════════════ */
+   鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?*/
 .cushion-body {
   fill: var(--pressure-0);
   stroke: var(--border);
@@ -833,9 +888,9 @@ body::before {
   pointer-events: none;
 }
 
-/* ═══════════════════════════════════════════════════════
+/* 鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?
    ANIMATIONS & UTILITY
-   ═══════════════════════════════════════════════════════ */
+   鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?*/
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
@@ -857,7 +912,7 @@ body::before {
 </head>
 <body>
 
-<!-- ═══════════════ HEADER ═══════════════ -->
+<!-- 鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?HEADER 鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?-->
 <header class="header">
   <div class="header-left">
     <div class="logo">S</div>
@@ -867,15 +922,18 @@ body::before {
     <div class="session-timer" id="sessionTimer">00:00:00</div>
   </div>
   <div class="header-right">
-    <button id="connectBtn" style="padding: 4px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-card); cursor: pointer; font-family: var(--font-heading); font-size: 12px;">
+    <button id="connectBtn" class="connect-btn">
       Connect Hardware
     </button>
+    <button id="demoBtn" class="connect-btn demo-btn">
+      Run Demo Session
+    </button>
     <div class="status-dot"></div>
-    <span class="status-label">Hardware Ready</span>
+    <span class="status-label">Awaiting Connection</span>
   </div>
 </header>
 
-<!-- ═══════════════ MAIN GRID ═══════════════ -->
+<!-- 鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?MAIN GRID 鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?-->
 <div class="main">
 
   <!-- LEFT SIDEBAR -->
@@ -883,13 +941,13 @@ body::before {
     <div class="sidebar-title">Pressure Zones</div>
   </aside>
 
-  <!-- CENTER — CUSHION -->
+  <!-- CENTER 鈥?CUSHION -->
   <main class="center-panel">
     <div class="cushion-container" id="cushionContainer">
       <svg id="cushionSvg" class="cushion-svg" viewBox="0 0 500 400" preserveAspectRatio="xMidYMid meet">
         <defs>
           <clipPath id="cushionClip">
-            <rect x="10" y="10" width="480" height="380" rx="16" ry="16"/>
+            <path d="M 58 16 C 30 18 16 38 16 68 L 16 332 C 16 362 32 382 64 386 L 436 386 C 468 382 484 362 484 332 L 484 68 C 484 38 470 18 442 16 Z"/>
           </clipPath>
           <!-- Subtle grid pattern -->
           <pattern id="gridPattern" width="25" height="25" patternUnits="userSpaceOnUse">
@@ -898,37 +956,37 @@ body::before {
         </defs>
 
         <!-- Background grid -->
-        <rect x="10" y="10" width="480" height="380" rx="16" ry="16" fill="url(#gridPattern)" stroke="none"/>
+        <rect x="10" y="10" width="480" height="380" rx="28" ry="28" fill="url(#gridPattern)" stroke="none"/>
 
         <!-- Cushion body outline -->
-        <rect class="cushion-body" x="10" y="10" width="480" height="380" rx="16" ry="16"/>
+        <path class="cushion-body" d="M 58 16 C 30 18 16 38 16 68 L 16 332 C 16 362 32 382 64 386 L 436 386 C 468 382 484 362 484 332 L 484 68 C 484 38 470 18 442 16 Z"/>
 
         <!-- FSR ZONE PATHS (clipped to cushion) -->
         <g clip-path="url(#cushionClip)" id="fsrZonesGroup">
           <!-- Zone 0: Back-Left (left sit-bone) -->
           <path class="fsr-zone" id="zone0"
-                d="M 10 10 L 250 10 L 250 110 L 10 110 Z"/>
+                d="M 24 42 Q 28 20 54 18 H 238 Q 250 18 250 34 V 98 Q 248 110 232 110 H 34 Q 16 108 18 90 Z"/>
           <!-- Zone 1: Back-Right (right sit-bone) -->
           <path class="fsr-zone" id="zone1"
-                d="M 250 10 L 490 10 L 490 110 L 250 110 Z"/>
+                d="M 250 34 Q 250 18 264 18 H 446 Q 472 20 476 42 L 482 90 Q 484 108 466 110 H 268 Q 252 110 250 98 Z"/>
           <!-- Zone 2: Mid-Left (left hip) -->
           <path class="fsr-zone" id="zone2"
-                d="M 10 110 L 170 110 L 170 240 L 10 240 Z"/>
+                d="M 18 118 Q 22 110 34 110 H 156 Q 170 112 170 126 V 224 Q 168 238 152 240 H 34 Q 18 238 18 220 Z"/>
           <!-- Zone 3: Mid-Center-Left (left thigh) -->
           <path class="fsr-zone" id="zone3"
-                d="M 170 110 L 250 110 L 250 240 L 170 240 Z"/>
+                d="M 170 126 Q 172 110 186 110 H 238 Q 250 112 250 126 V 224 Q 248 240 232 240 H 188 Q 172 238 170 224 Z"/>
           <!-- Zone 4: Mid-Center-Right (right thigh) -->
           <path class="fsr-zone" id="zone4"
-                d="M 250 110 L 330 110 L 330 240 L 250 240 Z"/>
+                d="M 250 126 Q 252 112 264 110 H 314 Q 328 110 330 126 V 224 Q 328 238 312 240 H 268 Q 252 240 250 224 Z"/>
           <!-- Zone 5: Mid-Right (right hip) -->
           <path class="fsr-zone" id="zone5"
-                d="M 330 110 L 490 110 L 490 240 L 330 240 Z"/>
+                d="M 330 126 Q 332 112 346 110 H 466 Q 480 112 482 126 V 220 Q 482 238 466 240 H 348 Q 332 238 330 224 Z"/>
           <!-- Zone 6: Front-Left -->
           <path class="fsr-zone" id="zone6"
-                d="M 10 240 L 250 240 L 250 390 L 10 390 Z"/>
+                d="M 18 252 Q 22 240 38 240 H 232 Q 250 242 250 258 V 356 Q 246 382 220 384 H 62 Q 32 380 20 352 Z"/>
           <!-- Zone 7: Front-Right -->
           <path class="fsr-zone" id="zone7"
-                d="M 250 240 L 490 240 L 490 390 L 250 390 Z"/>
+                d="M 250 258 Q 250 242 268 240 H 462 Q 478 242 482 252 L 480 352 Q 468 380 438 384 H 280 Q 254 382 250 356 Z"/>
         </g>
 
         <!-- Zone boundary lines (subtle) -->
@@ -1012,6 +1070,10 @@ body::before {
           </g>
         </g>
       </svg>
+      <div class="connection-overlay" id="connectionOverlay">
+        <div class="connection-overlay-title">Connect hardware to begin</div>
+        <div class="connection-overlay-subtitle">Awaiting a live serial stream from the Arduino cushion before pressure, posture, and motor status become active.</div>
+      </div>
       <!-- Tooltip -->
       <div class="zone-tooltip" id="zoneTooltip"></div>
     </div>
@@ -1080,10 +1142,9 @@ body::before {
 
     <div class="motor-group">
       <div class="motor-reason" id="motorReason"></div>
-      <div class="motor-group-title">Square · S0 S1 S2 S3</div>
-      <div class="motor-grid" id="squareMotorGrid"></div>
-      <div class="motor-group-title" style="margin-top:8px">Cylindrical · C0 C1 C2 C3</div>
-      <div class="motor-grid" id="cylMotorGrid"></div>
+      <div class="motor-group-title">Physical Layout</div>
+      <div class="motor-group-title motor-group-subtitle">Mirrors the cushion motor placement</div>
+      <div class="motor-grid motor-layout-grid" id="motorLayoutGrid"></div>
     </div>
 
     <div class="threshold-card">
@@ -1118,13 +1179,13 @@ body::before {
   </aside>
 
   <!-- BOTTOM TIMELINE -->
-  <div class="timeline-drawer" id="timelineDrawer">
+  <div class="timeline-drawer expanded" id="timelineDrawer">
     <div class="timeline-header" id="timelineToggle">
       <div class="timeline-toggle">
         <span class="timeline-arrow">▼</span>
         Pressure Timeline
       </div>
-      <span style="font-size:11px;color:var(--text-tertiary)">Last 30s</span>
+      <span class="timeline-meta">Last 30s</span>
     </div>
     <div class="timeline-canvas-wrap">
       <canvas id="timelineCanvas"></canvas>
@@ -1133,25 +1194,25 @@ body::before {
 
 </div>
 
-<!-- ═══════════════════════════════════════════════════════
+<!-- 鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?
      JAVASCRIPT
-     ═══════════════════════════════════════════════════════ -->
+     鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?-->
 <script>
 (function() {
 'use strict';
 
-/* ─── CONFIGURATION ─── */
+/* 鈹€鈹€鈹€ CONFIGURATION 鈹€鈹€鈹€ */
 const ZONE_NAMES = [
   'Back-Right', 'Back-Left','Hip-Right', 'Thigh-Right', 'Thigh-Left', 'Hip-Left','Front-Right', 'Front-Left'
 ];
 
 const ZONE_COLORS = [
-  [232,223,208], // 0: cream (#E8DFD0)
-  [242,201,76],  // 1: yellow (#F2C94C)
-  [242,169,59],  // 2: amber (#F2A93B)
-  [229,112,60],  // 3: orange (#E5703C)
-  [229,80,60],   // 4: vermillion (#E5503C)
-  [185,28,58]    // 5: crimson (#B91C3A)
+  [249,243,236], // 0: soft ivory
+  [248,216,181], // 1: pale orange
+  [244,162,97],  // 2: signal orange
+  [231,111,81],  // 3: warm red-orange
+  [196,61,60],   // 4: deep red
+  [122,22,40]    // 5: oxblood
 ];
 
 const MOTOR_LABELS = ['C0','S0','C2','C1','S1','C3','S2','S3'];
@@ -1339,7 +1400,7 @@ function runLiveFsrSelfTests() {
 
   const remapped = Array.from(remapRawFsrFrame([10, 20, 30, 40, 50, 60, 70, 80]));
   assert(
-    JSON.stringify(remapped) === JSON.stringify([70, 80, 60, 50, 40, 30, 10, 20]),
+    JSON.stringify(remapped) === JSON.stringify([80, 70, 60, 50, 40, 30, 20, 10]),
     'Raw FSR channels should remap to the expected visual-zone order'
   );
 
@@ -1356,24 +1417,24 @@ function runLiveFsrSelfTests() {
   assert(Math.max(...weakOutput) >= 400, 'Weak seated frames should be amplified into a visible heatmap range');
   assert(weakOutput.filter(value => value > 100).length >= 4, 'Weak seated frames should spread across nearby zones');
 
-  const backLeftState = createLiveFsrTransformState();
-  const backLeftOutput = transformLiveFsrFrame([0, 0, 0, 0, 0, 0, 120, 0], backLeftState);
-  assert(backLeftOutput[0] > backLeftOutput[2], 'Primary source zone should remain the hottest zone');
-  assert(backLeftOutput[2] > backLeftOutput[1], 'Same-side neighbors should receive more force than far-side neighbors');
-  assert(backLeftOutput[3] > 0, 'Back pressure should bleed into the nearby thigh zone for demo continuity');
+  const backRightState = createLiveFsrTransformState();
+  const backRightOutput = transformLiveFsrFrame([0, 0, 0, 0, 0, 0, 0, 120], backRightState);
+  assert(backRightOutput[0] > backRightOutput[2], 'Back-right raw input should keep the visual back-right zone hottest');
+  assert(backRightOutput[2] > backRightOutput[1], 'Back-right spread should favor same-side support zones over the far-side back zone');
+  assert(backRightOutput[3] > 0, 'Back-right pressure should bleed into the nearby thigh zone for demo continuity');
 
   const frontRightState = createLiveFsrTransformState();
   const frontRightOutput = transformLiveFsrFrame([0, 140, 0, 0, 0, 0, 0, 0], frontRightState);
-  assert(frontRightOutput[7] > frontRightOutput[4], 'Front-right raw input should peak in the visual front-right zone');
-  assert(frontRightOutput[4] > frontRightOutput[6], 'Front-right spread should favor same-side thigh over opposite-side front');
+  assert(frontRightOutput[6] > frontRightOutput[3], 'Front-right raw input should peak in the visual front-right zone');
+  assert(frontRightOutput[7] === 0, 'Front-right input should not leak into the opposite-side front zone');
 
   const hipLeftState = createLiveFsrTransformState();
-  const hipLeftOutput = transformLiveFsrFrame([0, 0, 0, 0, 0, 150, 0, 0], hipLeftState);
-  assert(hipLeftOutput[2] > hipLeftOutput[5], 'Hip-left routing should be corrected in the dashboard transform');
+  const hipLeftOutput = transformLiveFsrFrame([0, 0, 150, 0, 0, 0, 0, 0], hipLeftState);
+  assert(hipLeftOutput[5] > hipLeftOutput[4], 'Hip-left raw input should peak in the visual hip-left zone');
 
   const thighRightState = createLiveFsrTransformState();
-  const thighRightOutput = transformLiveFsrFrame([0, 0, 0, 160, 0, 0, 0, 0], thighRightState);
-  assert(thighRightOutput[4] > thighRightOutput[3], 'Thigh-right routing should be corrected in the dashboard transform');
+  const thighRightOutput = transformLiveFsrFrame([0, 0, 0, 0, 160, 0, 0, 0], thighRightState);
+  assert(thighRightOutput[3] > thighRightOutput[2], 'Thigh-right raw input should peak in the visual thigh-right zone');
 
   const historyResetState = createLiveFsrTransformState();
   transformLiveFsrFrame([0, 0, 0, 0, 0, 0, 120, 0], historyResetState);
@@ -1383,8 +1444,8 @@ function runLiveFsrSelfTests() {
   assert(historyResetState.history.length === 0, 'Idle frames should clear adaptive live history to avoid stale heat');
 
   const clampedRemap = Array.from(remapRawFsrFrame([1200, -50, 30, 40, 50, 60, 70, 80]));
-  assert(clampedRemap[6] === 1023, 'Remap should clamp over-range raw values into display bounds');
-  assert(clampedRemap[7] === 0, 'Remap should clamp negative raw values into display bounds');
+  assert(clampedRemap[7] === 1023, 'Remap should clamp over-range raw values into display bounds');
+  assert(clampedRemap[6] === 0, 'Remap should clamp negative raw values into display bounds');
 
   return {
     ok: failures.length === 0,
@@ -1408,9 +1469,9 @@ if (typeof globalThis !== 'undefined') {
 }
 /* SENSEGRID LIVE FSR TRANSFORM END */
 
-/* ═══════════════════════════════════════════════════════
+/* 鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?
    POSTURE PREDICTION MODULE
-   ═══════════════════════════════════════════════════════ */
+   鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?*/
 
 const POSTURE_PROTOTYPES = Object.freeze([
   { id: 'lean_left',    label: 'Lean Left',      vec: [0.05, 0.90, 0.05, 0.05, 0.55, 0.75, 0.05, 0.05] },
@@ -1422,7 +1483,7 @@ const POSTURE_PROTOTYPES = Object.freeze([
 ]);
 
 // Confidence thresholds derived from inter-prototype cosine similarity analysis.
-// Hardest pair: lean_left ↔ lean_back at ~0.74 cosine similarity.
+// Hardest pair: lean_left 鈫?lean_back at ~0.74 cosine similarity.
 // CONF_HIGH (0.78) sits above that ceiling to avoid misclassification.
 const POSTURE_CONF_HIGH   = 0.78;
 const POSTURE_CONF_LOW    = 0.62;
@@ -1440,7 +1501,7 @@ const POSTURE_UNIT_VECS = POSTURE_PROTOTYPES.map(p => {
   return v.map(x => x / norm);
 });
 
-// Motor routing: posture id → [8-motor bitmask], reason string
+// Motor routing: posture id 鈫?[8-motor bitmask], reason string
 const MOTOR_ROUTING = Object.freeze({
   lean_left:    { motors: [0,0,1,0,1,1,0,0], reason: '\u2190 Left lean' },
   lean_right:   { motors: [1,0,0,1,1,0,0,0], reason: '\u2192 Right lean' },
@@ -1451,7 +1512,7 @@ const MOTOR_ROUTING = Object.freeze({
 });
 
 function predictPosture(fsrValues) {
-  // Normalise FSR [0-1023] → [0-1]
+  // Normalise FSR [0-1023] 鈫?[0-1]
   const p = new Float32Array(8);
   for (let i = 0; i < 8; i++) p[i] = fsrValues[i] / 1023;
 
@@ -1515,7 +1576,7 @@ function updatePostureSmoothed(postureState, rawResult) {
 
   // Label persistence logic
   if (!rawResult.primary) {
-    // Empty seat → reset
+    // Empty seat 鈫?reset
     ps.currentId = null;
     ps.pendingId = null;
     ps.pendingTicks = 0;
@@ -1524,11 +1585,11 @@ function updatePostureSmoothed(postureState, rawResult) {
   }
 
   if (topId === ps.currentId) {
-    // Same label — keep it, reset pending
+    // Same label 鈥?keep it, reset pending
     ps.pendingId = null;
     ps.pendingTicks = 0;
   } else if (topId === ps.pendingId) {
-    // Candidate is holding — count ticks
+    // Candidate is holding 鈥?count ticks
     ps.pendingTicks++;
     if (ps.pendingTicks >= POSTURE_PERSIST_TICKS ||
         (topScore - (ps.smoothedScores[POSTURE_PROTOTYPES.findIndex(p => p.id === ps.currentId)] || 0)) > POSTURE_OVERRIDE_MARGIN) {
@@ -1566,7 +1627,7 @@ function updatePostureSmoothed(postureState, rawResult) {
   return ps.displayResult;
 }
 
-/* ─── STATE ─── */
+/* 鈹€鈹€鈹€ STATE 鈹€鈹€鈹€ */
 const state = {
   fsr: new Float32Array(8),           // current interpolated values
   fsrTarget: new Float32Array(8),     // target values from data source
@@ -1580,10 +1641,15 @@ const state = {
   interpT: 0,
   expandedZone: -1,
   posture: createPostureState(),
-  motorReason: ''
+  motorReason: '',
+  zoneColors: Array.from({length: 8}, () => 'rgb(249,243,236)'),
+  latestZoneColors: Array.from({length: 8}, () => 'rgb(249,243,236)'),
+  sparklinesDirty: true,
+  timelineDirty: true,
+  hasReceivedData: false
 };
 
-/* ─── DATA SOURCE INTERFACE ─── */
+/* 鈹€鈹€鈹€ DATA SOURCE INTERFACE 鈹€鈹€鈹€ */
 class DataSource {
   constructor(onData) { this.onData = onData; }
   start() {}
@@ -1591,7 +1657,7 @@ class DataSource {
   destroy() {}
 }
 
-/* ─── REAL SERIAL DATA SOURCE ─── */
+/* 鈹€鈹€鈹€ REAL SERIAL DATA SOURCE 鈹€鈹€鈹€ */
 class SerialDataSource extends DataSource {
   constructor(onData) {
     super(onData);
@@ -1605,11 +1671,11 @@ class SerialDataSource extends DataSource {
 
   async start() {
     try {
-      // 请求用户选择串口
+      // 璇锋眰鐢ㄦ埛閫夋嫨涓插彛
       this.keepReading = true;
       this.port = await navigator.serial.requestPort();
       
-      // 打开串口，波特率必须与 Arduino 的 9600 完全一致
+      // 鎵撳紑涓插彛锛屾尝鐗圭巼蹇呴』涓?Arduino 鐨?9600 瀹屽叏涓€鑷?
       await this.port.open({ baudRate: 9600 });
 
       const decoder = new TextDecoderStream();
@@ -1638,33 +1704,32 @@ class SerialDataSource extends DataSource {
           this.processBuffer();
         }
       } catch (error) {
+        if (!this.keepReading) break;
         console.error('Read error:', error);
         this.connected = false;
+        serialSource = null;
         setDashboardModeLabel('Connection Lost');
-        const btn = document.getElementById('connectBtn');
-        btn.textContent = 'Reconnect';
-        btn.style.background = 'var(--bg-card)';
-        btn.style.color = '';
+        updateSourceButtons();
         break;
       }
     }
   }
 
   processBuffer() {
-    // 按换行符分割数据
+    // 鎸夋崲琛岀鍒嗗壊鏁版嵁
     const lines = this.buffer.split('\n');
     
-    // 保留最后一段可能不完整的数据留在缓存中
+    // 淇濈暀鏈€鍚庝竴娈靛彲鑳戒笉瀹屾暣鐨勬暟鎹暀鍦ㄧ紦瀛樹腑
     this.buffer = lines.pop(); 
 
     for (const line of lines) {
       const cleanLine = line.trim();
       if (!cleanLine) continue;
 
-      // 你的 Arduino 代码通过逗号分隔发送了 8 个数据点
+      // 浣犵殑 Arduino 浠ｇ爜閫氳繃閫楀彿鍒嗛殧鍙戦€佷簡 8 涓暟鎹偣
       const values = parseSerialFrame(cleanLine);
       
-      // 确保收到的是完整的 8 个通道数据
+      // 纭繚鏀跺埌鐨勬槸瀹屾暣鐨?8 涓€氶亾鏁版嵁
       if (!values) continue;
 
       this.onData({
@@ -1686,10 +1751,95 @@ class SerialDataSource extends DataSource {
   }
 }
 
-/* ─── PRESSURE COLOR INTERPOLATION ─── */
+/* 鈹€鈹€鈹€ SOFTWARE DEMO DATA SOURCE 鈹€鈹€鈹€ */
+class FakeSessionDataSource extends DataSource {
+  constructor(onData) {
+    super(onData);
+    this.connected = false;
+    this.intervalId = null;
+    this.tick = 0;
+    this.scenarioFrames = this.buildScenarioFrames();
+    this.samplesPerScenario = 18;
+  }
+
+  buildScenarioFrames() {
+    const baseSeat = [220, 220, 180, 200, 200, 180, 120, 120];
+    const emptySeat = new Array(8).fill(0);
+    const centeredSeat = [460, 460, 310, 340, 340, 310, 180, 180];
+
+    const postureFrame = (postureId, amplitude = 620, floor = 48) => {
+      const proto = POSTURE_PROTOTYPES.find(item => item.id === postureId);
+      return proto.vec.map((value, index) => {
+        const combined = floor + baseSeat[index] * 0.45 + value * amplitude;
+        return Math.max(0, Math.min(1023, Math.round(combined)));
+      });
+    };
+
+    return [
+      centeredSeat,
+      postureFrame('lean_left'),
+      centeredSeat,
+      postureFrame('lean_right'),
+      centeredSeat,
+      postureFrame('lean_forward'),
+      centeredSeat,
+      postureFrame('lean_back'),
+      centeredSeat,
+      postureFrame('cross_right'),
+      centeredSeat,
+      postureFrame('cross_left'),
+      centeredSeat,
+      emptySeat,
+      emptySeat
+    ];
+  }
+
+  createFrame() {
+    const scenarioIndex = Math.floor(this.tick / this.samplesPerScenario) % this.scenarioFrames.length;
+    const nextScenarioIndex = (scenarioIndex + 1) % this.scenarioFrames.length;
+    const localTick = this.tick % this.samplesPerScenario;
+    const blend = localTick / this.samplesPerScenario;
+    const easedBlend = blend * blend * (3 - 2 * blend);
+    const currentFrame = this.scenarioFrames[scenarioIndex];
+    const nextFrame = this.scenarioFrames[nextScenarioIndex];
+
+    return currentFrame.map((value, index) => {
+      const interpolated = value + (nextFrame[index] - value) * easedBlend;
+      const phase = this.tick * 0.37 + index * 0.91;
+      const shimmer = Math.sin(phase) * 18 + Math.cos(phase * 0.53) * 10;
+      return Math.max(0, Math.min(1023, Math.round(interpolated + shimmer)));
+    });
+  }
+
+  emitFrame() {
+    this.onData({
+      timestamp: Date.now(),
+      fsr: this.createFrame()
+    });
+    this.tick += 1;
+  }
+
+  async start() {
+    this.connected = true;
+    setDashboardModeLabel('Demo Session');
+    this.emitFrame();
+    this.intervalId = setInterval(() => this.emitFrame(), 120);
+    return true;
+  }
+
+  async stop() {
+    this.connected = false;
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
+  }
+}
+
+/* 鈹€鈹€鈹€ PRESSURE COLOR INTERPOLATION 鈹€鈹€鈹€ */
 function pressureToColor(value) {
   const t = Math.max(0, Math.min(1, value / 1023));
-  // Multi-stop gradient: 0→cream, 0.2→yellow, 0.4→amber, 0.6→orange, 0.8→vermillion, 1.0→crimson
+  // Multi-stop gradient: 0鈫抍ream, 0.2鈫抷ellow, 0.4鈫抋mber, 0.6鈫抩range, 0.8鈫抳ermillion, 1.0鈫抍rimson
   const stops = [0, 0.2, 0.4, 0.6, 0.8, 1.0];
   let i = 0;
   for (; i < stops.length - 1; i++) {
@@ -1704,7 +1854,7 @@ function pressureToColor(value) {
   return `rgb(${r},${g},${b})`;
 }
 
-/* ─── DOM REFERENCES ─── */
+/* 鈹€鈹€鈹€ DOM REFERENCES 鈹€鈹€鈹€ */
 const $timer = document.getElementById('sessionTimer');
 const $thresholdSlider = document.getElementById('thresholdSlider');
 const $thresholdVal = document.getElementById('thresholdVal');
@@ -1712,11 +1862,14 @@ const $statAvg = document.getElementById('statAvg');
 const $statPeak = document.getElementById('statPeak');
 const $statAlerts = document.getElementById('statAlerts');
 const $statMotors = document.getElementById('statMotors');
+const $connectBtn = document.getElementById('connectBtn');
+const $demoBtn = document.getElementById('demoBtn');
 const $timelineDrawer = document.getElementById('timelineDrawer');
 const $timelineToggle = document.getElementById('timelineToggle');
 const $timelineCanvas = document.getElementById('timelineCanvas');
 const $tooltip = document.getElementById('zoneTooltip');
 const $cushionContainer = document.getElementById('cushionContainer');
+const $connectionOverlay = document.getElementById('connectionOverlay');
 const $zoneSidebar = document.getElementById('zoneSidebar');
 const $modeStatus = document.querySelector('.status-label');
 
@@ -1731,9 +1884,31 @@ function setDashboardModeLabel(label) {
   }
 }
 
-setDashboardModeLabel('Hardware Ready');
+function updateConnectionOverlay() {
+  if (!$connectionOverlay) return;
+  $connectionOverlay.classList.toggle('hidden', state.hasReceivedData);
+}
 
-/* ─── BUILD ZONE CARDS ─── */
+function updateSourceButtons() {
+  if ($connectBtn) {
+    const liveActive = !!(serialSource && serialSource.connected);
+    $connectBtn.textContent = liveActive ? 'Disconnect Hardware' : 'Connect Hardware';
+    $connectBtn.style.background = liveActive ? 'var(--motor-blue-light)' : 'var(--bg-card)';
+    $connectBtn.style.color = liveActive ? 'white' : '';
+  }
+
+  if ($demoBtn) {
+    const demoActive = !!(demoSource && demoSource.connected);
+    $demoBtn.textContent = demoActive ? 'Stop Demo Session' : 'Run Demo Session';
+    $demoBtn.style.background = demoActive ? 'var(--accent-orange)' : 'var(--bg-card-hover)';
+    $demoBtn.style.color = demoActive ? 'white' : '';
+  }
+}
+
+setDashboardModeLabel('Awaiting Connection');
+updateConnectionOverlay();
+
+/* 鈹€鈹€鈹€ BUILD ZONE CARDS 鈹€鈹€鈹€ */
 function buildZoneCards() {
   ZONE_NAMES.forEach((name, i) => {
     const card = document.createElement('div');
@@ -1762,7 +1937,7 @@ function buildZoneCards() {
           </div>
           <div class="zone-detail-item">
             <span class="zone-detail-label">Trend</span>
-            <span class="zone-detail-val" id="zoneTrend${i}">—</span>
+            <span class="zone-detail-val" id="zoneTrend${i}">--</span>
           </div>
         </div>
       </div>
@@ -1781,32 +1956,20 @@ function buildZoneCards() {
   });
 }
 
-/* ─── BUILD MOTOR INDICATORS ─── */
+/* 鈹€鈹€鈹€ BUILD MOTOR INDICATORS 鈹€鈹€鈹€ */
 function buildMotorButtons() {
-  const sqGrid = document.getElementById('squareMotorGrid');
-  const cylGrid = document.getElementById('cylMotorGrid');
-  // Motor indices: [C0, S0, C2, C1, S1, C3, S2, S3]
-  // Square (S-type) at indices 1,4,6,7 — Cylindrical (C-type) at indices 0,2,3,5
-  const squareIndices = [1, 4, 6, 7]; // S0, S1, S2, S3
-  const cylIndices = [0, 2, 3, 5];    // C0, C2, C1, C3
+  const layoutGrid = document.getElementById('motorLayoutGrid');
 
-  for (const i of squareIndices) {
+  for (let i = 0; i < MOTOR_LABELS.length; i++) {
     const el = document.createElement('div');
-    el.className = 'motor-btn';
+    el.className = `motor-btn motor-btn-${i}`;
     el.innerHTML = `<div class="motor-btn-dot"></div><span class="motor-btn-label">${MOTOR_LABELS[i]}</span>`;
-    sqGrid.appendChild(el);
-    $motorBtns[i] = el;
-  }
-  for (const i of cylIndices) {
-    const el = document.createElement('div');
-    el.className = 'motor-btn';
-    el.innerHTML = `<div class="motor-btn-dot"></div><span class="motor-btn-label">${MOTOR_LABELS[i]}</span>`;
-    cylGrid.appendChild(el);
+    layoutGrid.appendChild(el);
     $motorBtns[i] = el;
   }
 }
 
-/* ─── INIT SVG REFERENCES ─── */
+/* 鈹€鈹€鈹€ INIT SVG REFERENCES 鈹€鈹€鈹€ */
 function initSvgRefs() {
   for (let i = 0; i < 8; i++) {
     $zones.push(document.getElementById(`zone${i}`));
@@ -1826,7 +1989,7 @@ function initSvgRefs() {
   }
 }
 
-/* ─── ZONE HOVER TOOLTIP ─── */
+/* 鈹€鈹€鈹€ ZONE HOVER TOOLTIP 鈹€鈹€鈹€ */
 function initZoneTooltip() {
   $zones.forEach((zone, i) => {
     zone.addEventListener('mouseenter', (e) => {
@@ -1845,11 +2008,12 @@ function initZoneTooltip() {
   });
 }
 
-/* ─── UPDATE FUNCTIONS ─── */
+/* 鈹€鈹€鈹€ UPDATE FUNCTIONS 鈹€鈹€鈹€ */
 function updateZoneFills() {
   for (let i = 0; i < 8; i++) {
     const val = state.fsr[i];
     const color = pressureToColor(val);
+    state.zoneColors[i] = color;
     $zones[i].style.fill = color;
 
     // Alert glow for zones over threshold
@@ -1878,19 +2042,23 @@ function updateMotorVisuals() {
   }
 }
 
-function updateZoneCards() {
+function updateZoneCards(frame = state.fsr, colors = state.zoneColors) {
+  const values = Array.from(frame);
+
   for (let i = 0; i < 8; i++) {
-    const val = Math.round(state.fsr[i]);
+    const sample = values[i] || 0;
+    const val = Math.round(sample);
     const $val = document.getElementById(`zoneVal${i}`);
     if ($val) $val.textContent = val;
 
     // Update color indicator bar
     const card = $zoneSidebar.querySelectorAll('.zone-card')[i];
     if (card) {
-      card.style.setProperty('--zone-color', pressureToColor(state.fsr[i]));
-      card.querySelector('::before') ; // CSS handles this via style
+      const cardColor = colors[i] || pressureToColor(sample);
+      card.style.setProperty('--zone-color', cardColor);
+      card.style.setProperty('--zone-indicator', cardColor);
       // Actually set it via inline style on the pseudo-element workaround:
-      card.style.borderLeftColor = pressureToColor(state.fsr[i]);
+      card.style.borderLeftColor = cardColor;
     }
 
     // Sparkline data
@@ -1903,7 +2071,7 @@ function updateZoneCards() {
       const min = Math.min(...arr);
       const max = Math.max(...arr);
       const avg = Math.round(arr.reduce((a, b) => a + b, 0) / arr.length);
-      const trend = arr.length > 5 ? (arr[arr.length-1] > arr[arr.length-6] ? '↑' : arr[arr.length-1] < arr[arr.length-6] ? '↓' : '→') : '—';
+      const trend = arr.length > 5 ? (arr[arr.length-1] > arr[arr.length-6] ? 'UP' : arr[arr.length-1] < arr[arr.length-6] ? 'DOWN' : 'FLAT') : '--';
 
       const $min = document.getElementById(`zoneMin${i}`);
       const $max = document.getElementById(`zoneMax${i}`);
@@ -1955,7 +2123,7 @@ function drawSparklines() {
       if (j === 0) ctx.moveTo(x, y);
       else ctx.lineTo(x, y);
     }
-    ctx.strokeStyle = pressureToColor(data[data.length - 1]);
+    ctx.strokeStyle = state.latestZoneColors[i] || state.zoneColors[i];
     ctx.lineWidth = 1.5 * (window.devicePixelRatio || 1);
     ctx.stroke();
 
@@ -1977,6 +2145,7 @@ function updateTimeline(data) {
     state.timeline[i].push(data.fsr[i]);
     if (state.timeline[i].length > TIMELINE_HISTORY) state.timeline[i].shift();
   }
+  state.timelineDirty = true;
 }
 
 function drawTimeline() {
@@ -2044,8 +2213,8 @@ function drawTimeline() {
   }
 }
 
-function updateStats() {
-  const values = Array.from(state.fsr);
+function updateStats(frame = state.fsr) {
+  const values = Array.from(frame);
   const avg = Math.round(values.reduce((a, b) => a + b, 0) / values.length);
   const peak = Math.round(Math.max(...values));
   const alerts = values.filter(v => v > state.threshold).length;
@@ -2059,7 +2228,7 @@ function updateStats() {
   if (alerts > 0) state.alertCount++;
 }
 
-/* ─── POSTURE UI UPDATES ─── */
+/* 鈹€鈹€鈹€ POSTURE UI UPDATES 鈹€鈹€鈹€ */
 const $postureLabel = document.getElementById('postureLabel');
 const $postureBarFill = document.getElementById('postureBarFill');
 const $posturePct = document.getElementById('posturePct');
@@ -2076,6 +2245,15 @@ const SILHOUETTE_TRANSFORMS = {
   cross_left:   'rotate(5deg)'
 };
 
+function setElementClass(element, className) {
+  if (!element) return;
+  if (typeof element.setAttribute === 'function') {
+    element.setAttribute('class', className);
+    return;
+  }
+  element.className = className;
+}
+
 function updatePostureCard(result) {
   if (!result || !result.primary) {
     $postureLabel.textContent = 'Monitoring\u2026';
@@ -2084,7 +2262,7 @@ function updatePostureCard(result) {
     $posturePct.textContent = '';
     $postureSecondary.textContent = '';
     $postureSilhouette.style.transform = '';
-    $postureSilhouette.className = 'posture-silhouette';
+    setElementClass($postureSilhouette, 'posture-silhouette');
     return;
   }
 
@@ -2118,9 +2296,9 @@ function updatePostureCard(result) {
   $postureSilhouette.style.transform = SILHOUETTE_TRANSFORMS[postureId] || '';
 
   // Leg swap for cross-leg postures
-  $postureSilhouette.className = 'posture-silhouette' +
+  setElementClass($postureSilhouette, 'posture-silhouette' +
     (postureId === 'cross_right' ? ' cross-right' : '') +
-    (postureId === 'cross_left' ? ' cross-left' : '');
+    (postureId === 'cross_left' ? ' cross-left' : ''));
 }
 
 function updateMotorReasonBadge() {
@@ -2140,16 +2318,20 @@ function updateSessionTimer() {
   $timer.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
 }
 
-/* ─── DATA HANDLER ─── */
+/* 鈹€鈹€鈹€ DATA HANDLER 鈹€鈹€鈹€ */
 function onData(data) {
   // Store previous and set new targets
   for (let i = 0; i < 8; i++) {
     state.fsrPrev[i] = state.fsrTarget[i];
     state.fsrTarget[i] = data.fsr[i];
+    state.latestZoneColors[i] = pressureToColor(data.fsr[i]);
   }
   state.interpT = 0;
+  state.sparklinesDirty = true;
+  state.hasReceivedData = true;
+  updateConnectionOverlay();
 
-  // Posture prediction → motor routing
+  // Posture prediction 鈫?motor routing
   const rawPrediction = predictPosture(data.fsr);
   const result = updatePostureSmoothed(state.posture, rawPrediction);
 
@@ -2172,33 +2354,38 @@ function onData(data) {
   updateTimeline(data);
 
   // Stats
-  updateStats();
+  updateStats(data.fsr);
 
   // Zone card values
-  updateZoneCards();
+  updateZoneCards(data.fsr, state.latestZoneColors);
 }
 
 let lastRenderTime = 0;
 
-/* ─── EVENT HANDLERS ─── */
+/* 鈹€鈹€鈹€ EVENT HANDLERS 鈹€鈹€鈹€ */
 function initEvents() {
   $thresholdSlider.addEventListener('input', (e) => {
     state.threshold = parseInt(e.target.value);
     $thresholdVal.textContent = state.threshold;
+    state.sparklinesDirty = true;
+    state.timelineDirty = true;
   });
 
   $timelineToggle.addEventListener('click', () => {
     $timelineDrawer.classList.toggle('expanded');
+    if ($timelineDrawer.classList.contains('expanded')) {
+      state.timelineDirty = true;
+    }
   });
 
 }
 
-/* ─── ZONE CARD BORDER COLOR (pseudo-element workaround) ─── */
+/* 鈹€鈹€鈹€ ZONE CARD BORDER COLOR (pseudo-element workaround) 鈹€鈹€鈹€ */
 // We need to inject a dynamic style for zone card left borders
 function updateZoneCardColors() {
   const cards = $zoneSidebar.querySelectorAll('.zone-card');
   cards.forEach((card, i) => {
-    const color = pressureToColor(state.fsr[i] || 0);
+    const color = state.zoneColors[i];
     // Use the ::before pseudo via CSS custom property
     card.style.setProperty('--zone-indicator', color);
   });
@@ -2209,7 +2396,7 @@ const dynamicStyle = document.createElement('style');
 dynamicStyle.textContent = `.zone-card::before { background: var(--zone-indicator, var(--pressure-0)) !important; }`;
 document.head.appendChild(dynamicStyle);
 
-/* ─── BOOTSTRAP ─── */
+/* 鈹€鈹€鈹€ BOOTSTRAP 鈹€鈹€鈹€ */
 buildZoneCards();
 buildMotorButtons();
 
@@ -2234,10 +2421,14 @@ requestAnimationFrame(() => {
     updateZoneFills();
     updateMotorVisuals();
     updateZoneCardColors();
-    drawSparklines();
+    if (state.sparklinesDirty) {
+      drawSparklines();
+      state.sparklinesDirty = false;
+    }
 
-    if ($timelineDrawer.classList.contains('expanded')) {
+    if ($timelineDrawer.classList.contains('expanded') && state.timelineDirty) {
       drawTimeline();
+      state.timelineDirty = false;
     }
 
     updateSessionTimer();
@@ -2248,28 +2439,73 @@ requestAnimationFrame(() => {
 });
 
 let serialSource = null;
+let demoSource = null;
 
-document.getElementById('connectBtn').addEventListener('click', async () => {
-  const btn = document.getElementById('connectBtn');
-  if (serialSource && serialSource.connected) {
-    await serialSource.stop();
-    serialSource = null;
-    btn.textContent = 'Connect Hardware';
-    btn.style.background = 'var(--bg-card)';
-    btn.style.color = '';
-    setDashboardModeLabel('Hardware Ready');
-  } else {
-    const nextSerialSource = new SerialDataSource(onData);
-    const connected = await nextSerialSource.start();
-    if (!connected) return;
-    serialSource = nextSerialSource;
-    btn.textContent = 'Disconnect';
-    btn.style.background = 'var(--motor-blue-light)';
-    btn.style.color = 'white';
+async function stopSource(sourceRef) {
+  if (sourceRef && sourceRef.connected) {
+    await sourceRef.stop();
   }
+}
+
+async function stopAllSources() {
+  await stopSource(serialSource);
+  await stopSource(demoSource);
+  serialSource = null;
+  demoSource = null;
+  setDashboardModeLabel('Awaiting Connection');
+  updateSourceButtons();
+}
+
+$connectBtn.addEventListener('click', async () => {
+  if (serialSource && serialSource.connected) {
+    await stopAllSources();
+    return;
+  }
+
+  await stopSource(demoSource);
+  demoSource = null;
+
+  const nextSerialSource = new SerialDataSource(onData);
+  const connected = await nextSerialSource.start();
+  if (!connected) {
+    updateSourceButtons();
+    return;
+  }
+
+  serialSource = nextSerialSource;
+  updateSourceButtons();
 });
+
+$demoBtn.addEventListener('click', async () => {
+  if (demoSource && demoSource.connected) {
+    await stopAllSources();
+    return;
+  }
+
+  await stopSource(serialSource);
+  serialSource = null;
+
+  const nextDemoSource = new FakeSessionDataSource(onData);
+  await nextDemoSource.start();
+  demoSource = nextDemoSource;
+  updateSourceButtons();
+});
+
+updateSourceButtons();
+
+const searchParams = new URLSearchParams(globalThis.location?.search || '');
+if (searchParams.get('demo') === '1') {
+  setTimeout(() => {
+    if (!$demoBtn) return;
+    $demoBtn.click();
+  }, 0);
+}
 
 })();
 </script>
 </body>
 </html>
+
+
+
+
