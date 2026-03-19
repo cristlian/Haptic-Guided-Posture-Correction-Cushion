@@ -1,4 +1,4 @@
-const fs = require('fs');
+﻿const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
 
@@ -272,6 +272,7 @@ if (typeof globalThis !== 'undefined') {
     createPostureState,
     predictPosture,
     updatePostureSmoothed,
+    computeProjectedPose,
     pressureToColor,
     SerialDataSource,
     FakeSessionDataSource,
@@ -355,3 +356,5 @@ if (typeof globalThis !== 'undefined') {
 module.exports = {
   loadDashboard
 };
+
+

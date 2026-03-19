@@ -629,25 +629,52 @@ html, body {
 }
 
 .posture-silhouette {
-  width: 92px;
-  height: 126px;
-  transition: transform 600ms ease;
+  width: 104px;
+  height: 136px;
+  overflow: visible;
+  filter: drop-shadow(0 4px 10px rgba(26, 26, 24, 0.05));
 }
 
 .posture-silhouette .body-fill {
   fill: var(--text-secondary);
-  opacity: 0.55;
+  opacity: 0.6;
 }
 
-.posture-silhouette .leg-normal { display: block; }
+.posture-silhouette .person > g,
+.posture-silhouette #poseHeadGroup,
+.posture-silhouette #poseLeftArmGroup,
+.posture-silhouette #poseRightArmGroup,
+.posture-silhouette #poseChair {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 320ms cubic-bezier(0.23, 1, 0.32, 1), opacity 220ms ease;
+}
+
+.posture-silhouette .chair-stroke {
+  fill: none;
+  stroke: var(--text-tertiary);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.45;
+}
+
+.posture-silhouette .chair-seat {
+  fill: var(--bg-card-hover);
+  stroke: var(--text-tertiary);
+  stroke-width: 1.2;
+  opacity: 0.35;
+}
+
+.posture-silhouette .leg-normal { display: block; opacity: 1; }
 .posture-silhouette .leg-cross-r,
-.posture-silhouette .leg-cross-l { display: none; }
+.posture-silhouette .leg-cross-l { display: none; opacity: 0; }
 
-.posture-silhouette.cross-right .leg-normal { display: none; }
-.posture-silhouette.cross-right .leg-cross-r { display: block; }
+.posture-silhouette.cross-right .leg-normal { display: none; opacity: 0; }
+.posture-silhouette.cross-right .leg-cross-r { display: block; opacity: 1; }
 
-.posture-silhouette.cross-left .leg-normal { display: none; }
-.posture-silhouette.cross-left .leg-cross-l { display: block; }
+.posture-silhouette.cross-left .leg-normal { display: none; opacity: 0; }
+.posture-silhouette.cross-left .leg-cross-l { display: block; opacity: 1; }
 
 .posture-label {
   font-size: 14px;
@@ -1096,35 +1123,87 @@ html, body {
     <div class="posture-card" id="postureCard">
       <div class="posture-card-title">Posture Detection</div>
       <div class="posture-silhouette-wrap">
-        <svg class="posture-silhouette" id="postureSilhouette" viewBox="0 0 64 88" fill="none">
-          <!-- Head -->
-          <circle class="body-fill" cx="32" cy="10" r="8"/>
-          <!-- Neck -->
-          <rect class="body-fill" x="29" y="18" width="6" height="4" rx="2"/>
-          <!-- Torso -->
-          <rect class="body-fill" x="20" y="22" width="24" height="24" rx="4"/>
-          <!-- Left arm -->
-          <rect class="body-fill" x="10" y="24" width="10" height="5" rx="2.5" transform="rotate(-10 15 26.5)"/>
-          <!-- Right arm -->
-          <rect class="body-fill" x="44" y="24" width="10" height="5" rx="2.5" transform="rotate(10 49 26.5)"/>
-          <!-- Normal legs -->
-          <g class="leg-normal">
-            <rect class="body-fill" x="21" y="46" width="9" height="20" rx="3"/>
-            <rect class="body-fill" x="34" y="46" width="9" height="20" rx="3"/>
-            <rect class="body-fill" x="20" y="64" width="10" height="8" rx="3"/>
-            <rect class="body-fill" x="34" y="64" width="10" height="8" rx="3"/>
+        <svg class="posture-silhouette" id="postureSilhouette" viewBox="0 0 80 100" fill="none">
+          <!-- Chair (behind person) -->
+          <g class="chair" id="poseChair">
+            <!-- Chair back (backrest) -->
+            <path class="chair-stroke" d="M22,28 L22,12 Q22,8 26,8 L54,8 Q58,8 58,12 L58,28"/>
+            <path class="chair-stroke" d="M22,12 L58,12"/>
+            <!-- Chair seat surface -->
+            <path class="chair-seat" d="M18,48 L62,48 L58,28 L22,28 Z"/>
+            <!-- Chair legs -->
+            <line class="chair-stroke" x1="20" y1="48" x2="16" y2="68"/>
+            <line class="chair-stroke" x1="60" y1="48" x2="64" y2="68"/>
+            <!-- Front crossbar -->
+            <path class="chair-stroke" d="M16,68 L64,68"/>
           </g>
-          <!-- Cross-leg right (R over L) -->
-          <g class="leg-cross-r">
-            <rect class="body-fill" x="21" y="46" width="9" height="20" rx="3"/>
-            <rect class="body-fill" x="28" y="46" width="9" height="18" rx="3" transform="rotate(20 32 55)"/>
-            <rect class="body-fill" x="20" y="64" width="10" height="8" rx="3"/>
-          </g>
-          <!-- Cross-leg left (L over R) -->
-          <g class="leg-cross-l">
-            <rect class="body-fill" x="34" y="46" width="9" height="20" rx="3"/>
-            <rect class="body-fill" x="27" y="46" width="9" height="18" rx="3" transform="rotate(-20 32 55)"/>
-            <rect class="body-fill" x="34" y="64" width="10" height="8" rx="3"/>
+          <!-- Person (seated, 3/4 isometric view) -->
+          <g class="person">
+            <g id="poseUpperBody">
+              <g id="poseHeadGroup">
+                <!-- Head -->
+                <ellipse class="body-fill" cx="40" cy="18" rx="7" ry="8"/>
+                <!-- Neck -->
+                <rect class="body-fill" x="37" y="26" width="6" height="4" rx="2"/>
+              </g>
+              <!-- Torso (slightly wider, seated posture) -->
+              <path class="body-fill" d="M28,30 Q28,28 30,28 L50,28 Q52,28 52,30 L52,50 Q52,52 50,52 L30,52 Q28,52 28,50 Z"/>
+              <g id="poseLeftArmGroup">
+                <!-- Left arm -->
+                <path class="body-fill" d="M28,32 Q24,32 22,34 L18,42 Q17,44 19,45 Q21,46 22,44 L26,36 Q27,34 28,36" />
+              </g>
+              <g id="poseRightArmGroup">
+                <!-- Right arm -->
+                <path class="body-fill" d="M52,32 Q56,32 58,34 L62,42 Q63,44 61,45 Q59,46 58,44 L54,36 Q53,34 52,36" />
+              </g>
+            </g>
+            <g id="poseLowerBody">
+            <!-- Normal legs (bent at knee, feet forward) -->
+            <g class="leg-normal" id="poseLegsNormal">
+              <!-- Left thigh (horizontal on seat) -->
+              <path class="body-fill" d="M30,50 Q29,50 29,52 L27,58 Q26,60 28,60 L36,60 Q38,60 38,58 L38,52 Q38,50 36,50 Z"/>
+              <!-- Right thigh -->
+              <path class="body-fill" d="M42,50 Q41,50 41,52 L41,58 Q41,60 43,60 L52,60 Q54,60 53,58 L51,52 Q51,50 49,50 Z"/>
+              <!-- Left shin (vertical down from knee) -->
+              <path class="body-fill" d="M27,60 Q26,60 26,62 L25,76 Q25,78 27,78 L33,78 Q35,78 35,76 L35,62 Q35,60 33,60 Z"/>
+              <!-- Right shin -->
+              <path class="body-fill" d="M45,60 Q44,60 44,62 L44,76 Q44,78 46,78 L52,78 Q54,78 54,76 L55,62 Q55,60 53,60 Z"/>
+              <!-- Left foot -->
+              <rect class="body-fill" x="24" y="78" width="12" height="5" rx="2.5"/>
+              <!-- Right foot -->
+              <rect class="body-fill" x="43" y="78" width="12" height="5" rx="2.5"/>
+            </g>
+            <!-- Cross-leg right (R over L) -->
+            <g class="leg-cross-r" id="poseLegsCrossRight">
+              <!-- Left thigh (under) -->
+              <path class="body-fill" d="M30,50 Q29,50 29,52 L27,58 Q26,60 28,60 L36,60 Q38,60 38,58 L38,52 Q38,50 36,50 Z"/>
+              <!-- Right thigh (crossed over, angled left) -->
+              <path class="body-fill" d="M42,50 Q41,49 40,50 L34,56 Q32,58 34,59 L40,62 Q42,63 43,61 L47,54 Q48,52 46,51 Z"/>
+              <!-- Left shin -->
+              <path class="body-fill" d="M27,60 Q26,60 26,62 L25,76 Q25,78 27,78 L33,78 Q35,78 35,76 L35,62 Q35,60 33,60 Z"/>
+              <!-- Right shin (angled, crossing) -->
+              <path class="body-fill" d="M34,59 Q32,59 31,61 L28,74 Q27,76 29,77 L35,77 Q37,77 37,75 L39,63 Q39,61 37,60 Z"/>
+              <!-- Left foot -->
+              <rect class="body-fill" x="24" y="78" width="12" height="5" rx="2.5"/>
+              <!-- Right foot (shifted left) -->
+              <rect class="body-fill" x="26" y="76" width="11" height="5" rx="2.5" transform="rotate(-10 32 79)"/>
+            </g>
+            <!-- Cross-leg left (L over R) -->
+            <g class="leg-cross-l" id="poseLegsCrossLeft">
+              <!-- Right thigh (under) -->
+              <path class="body-fill" d="M42,50 Q41,50 41,52 L41,58 Q41,60 43,60 L52,60 Q54,60 53,58 L51,52 Q51,50 49,50 Z"/>
+              <!-- Left thigh (crossed over, angled right) -->
+              <path class="body-fill" d="M36,50 Q38,49 39,50 L45,56 Q47,58 45,59 L39,62 Q37,63 36,61 L32,54 Q31,52 33,51 Z"/>
+              <!-- Right shin -->
+              <path class="body-fill" d="M45,60 Q44,60 44,62 L44,76 Q44,78 46,78 L52,78 Q54,78 54,76 L55,62 Q55,60 53,60 Z"/>
+              <!-- Left shin (angled, crossing) -->
+              <path class="body-fill" d="M45,59 Q47,59 48,61 L51,74 Q52,76 50,77 L44,77 Q42,77 42,75 L40,63 Q40,61 42,60 Z"/>
+              <!-- Right foot -->
+              <rect class="body-fill" x="43" y="78" width="12" height="5" rx="2.5"/>
+              <!-- Left foot (shifted right) -->
+              <rect class="body-fill" x="42" y="76" width="11" height="5" rx="2.5" transform="rotate(10 48 79)"/>
+            </g>
+            </g>
           </g>
         </svg>
       </div>
@@ -2235,15 +2314,78 @@ const $posturePct = document.getElementById('posturePct');
 const $postureSecondary = document.getElementById('postureSecondary');
 const $postureSilhouette = document.getElementById('postureSilhouette');
 const $motorReason = document.getElementById('motorReason');
+const $poseChair = document.getElementById('poseChair');
+const $poseUpperBody = document.getElementById('poseUpperBody');
+const $poseHeadGroup = document.getElementById('poseHeadGroup');
+const $poseLeftArmGroup = document.getElementById('poseLeftArmGroup');
+const $poseRightArmGroup = document.getElementById('poseRightArmGroup');
+const $poseLowerBody = document.getElementById('poseLowerBody');
 
-const SILHOUETTE_TRANSFORMS = {
-  lean_left:    'rotate(-10deg)',
-  lean_right:   'rotate(10deg)',
-  lean_forward: 'translateY(-3px) scaleY(0.95)',
-  lean_back:    'translateY(2px) scaleY(1.04)',
-  cross_right:  'rotate(-5deg)',
-  cross_left:   'rotate(5deg)'
-};
+const PROJECTED_POSE_PRESETS = Object.freeze({
+  neutral: Object.freeze({
+    className: '',
+    chair: Object.freeze({ shiftX: 0, shiftY: 0, yaw: 0, pitch: 0, roll: 0, depth: 0, scaleX: 1, scaleY: 1 }),
+    upper: Object.freeze({ shiftX: 0, shiftY: 0, yaw: 0, pitch: 0, roll: 0, depth: 0, scaleX: 1, scaleY: 1 }),
+    head: Object.freeze({ shiftX: 0, shiftY: 0, yaw: 0, pitch: 0, roll: 0, depth: 0, scaleX: 1, scaleY: 1 }),
+    leftArm: Object.freeze({ shiftX: 0, shiftY: 0, yaw: 0, pitch: 0, roll: 0, depth: 0, scaleX: 1, scaleY: 1 }),
+    rightArm: Object.freeze({ shiftX: 0, shiftY: 0, yaw: 0, pitch: 0, roll: 0, depth: 0, scaleX: 1, scaleY: 1 }),
+    lower: Object.freeze({ shiftX: 0, shiftY: 0, yaw: 0, pitch: 0, roll: 0, depth: 0, scaleX: 1, scaleY: 1 })
+  }),
+  lean_left: Object.freeze({
+    className: '',
+    chair: Object.freeze({ shiftX: 0.5, shiftY: 0, yaw: 0.5, pitch: 0, roll: 0, depth: 0, scaleX: 1, scaleY: 1 }),
+    upper: Object.freeze({ shiftX: -6, shiftY: -0.5, yaw: -7, pitch: 0, roll: -11, depth: 1, scaleX: 1, scaleY: 1 }),
+    head: Object.freeze({ shiftX: -5, shiftY: -3, yaw: -9, pitch: 0, roll: -13, depth: 1, scaleX: 0.98, scaleY: 1.02 }),
+    leftArm: Object.freeze({ shiftX: -1, shiftY: 1, yaw: -3, pitch: 0, roll: 10, depth: 0, scaleX: 1, scaleY: 1 }),
+    rightArm: Object.freeze({ shiftX: -4, shiftY: 4, yaw: -5, pitch: 0, roll: -14, depth: 1, scaleX: 1, scaleY: 1 }),
+    lower: Object.freeze({ shiftX: -3, shiftY: 1, yaw: -2, pitch: 0, roll: -3, depth: 0, scaleX: 1, scaleY: 1 })
+  }),
+  lean_right: Object.freeze({
+    className: '',
+    chair: Object.freeze({ shiftX: -0.5, shiftY: 0, yaw: -0.5, pitch: 0, roll: 0, depth: 0, scaleX: 1, scaleY: 1 }),
+    upper: Object.freeze({ shiftX: 6, shiftY: -0.5, yaw: 7, pitch: 0, roll: 11, depth: 1, scaleX: 1, scaleY: 1 }),
+    head: Object.freeze({ shiftX: 5, shiftY: -3, yaw: 9, pitch: 0, roll: 13, depth: 1, scaleX: 0.98, scaleY: 1.02 }),
+    leftArm: Object.freeze({ shiftX: 4, shiftY: 4, yaw: 5, pitch: 0, roll: 14, depth: 1, scaleX: 1, scaleY: 1 }),
+    rightArm: Object.freeze({ shiftX: 1, shiftY: 1, yaw: 3, pitch: 0, roll: -10, depth: 0, scaleX: 1, scaleY: 1 }),
+    lower: Object.freeze({ shiftX: 3, shiftY: 1, yaw: 2, pitch: 0, roll: 3, depth: 0, scaleX: 1, scaleY: 1 })
+  }),
+  lean_forward: Object.freeze({
+    className: '',
+    chair: Object.freeze({ shiftX: 0, shiftY: 0.5, yaw: 0, pitch: 2, roll: 0, depth: 0, scaleX: 1, scaleY: 1 }),
+    upper: Object.freeze({ shiftX: 0, shiftY: 6, yaw: 0, pitch: 16, roll: 2, depth: 8, scaleX: 1, scaleY: 0.97 }),
+    head: Object.freeze({ shiftX: 0, shiftY: 8, yaw: 0, pitch: 18, roll: 0, depth: 10, scaleX: 0.97, scaleY: 0.94 }),
+    leftArm: Object.freeze({ shiftX: -2, shiftY: 6, yaw: -2, pitch: 10, roll: 18, depth: 5, scaleX: 1, scaleY: 1 }),
+    rightArm: Object.freeze({ shiftX: 2, shiftY: 6, yaw: 2, pitch: 10, roll: -18, depth: 5, scaleX: 1, scaleY: 1 }),
+    lower: Object.freeze({ shiftX: 0, shiftY: 2, yaw: 0, pitch: 3, roll: 0, depth: 2, scaleX: 1.02, scaleY: 1 })
+  }),
+  lean_back: Object.freeze({
+    className: '',
+    chair: Object.freeze({ shiftX: 0, shiftY: -0.5, yaw: 0, pitch: -1, roll: 0, depth: -1, scaleX: 1, scaleY: 1.01 }),
+    upper: Object.freeze({ shiftX: 0, shiftY: -5, yaw: 0, pitch: -14, roll: 0, depth: -7, scaleX: 1.01, scaleY: 1.03 }),
+    head: Object.freeze({ shiftX: 0, shiftY: -8, yaw: 0, pitch: -16, roll: 0, depth: -9, scaleX: 1.03, scaleY: 1.05 }),
+    leftArm: Object.freeze({ shiftX: -1, shiftY: -1, yaw: -1, pitch: -5, roll: -8, depth: -2, scaleX: 1, scaleY: 1 }),
+    rightArm: Object.freeze({ shiftX: 1, shiftY: -1, yaw: 1, pitch: -5, roll: 8, depth: -2, scaleX: 1, scaleY: 1 }),
+    lower: Object.freeze({ shiftX: 0, shiftY: -1, yaw: 0, pitch: -2, roll: 0, depth: -1, scaleX: 1.01, scaleY: 1.01 })
+  }),
+  cross_right: Object.freeze({
+    className: 'cross-right',
+    chair: Object.freeze({ shiftX: 0, shiftY: 0, yaw: 0, pitch: 0, roll: 0, depth: 0, scaleX: 1, scaleY: 1 }),
+    upper: Object.freeze({ shiftX: -2, shiftY: 0, yaw: -5, pitch: 1, roll: -4, depth: 1, scaleX: 1, scaleY: 1 }),
+    head: Object.freeze({ shiftX: -2, shiftY: -2, yaw: -5, pitch: 0, roll: -5, depth: 1, scaleX: 0.99, scaleY: 1.01 }),
+    leftArm: Object.freeze({ shiftX: -1, shiftY: 1, yaw: -2, pitch: 0, roll: 6, depth: 0, scaleX: 1, scaleY: 1 }),
+    rightArm: Object.freeze({ shiftX: -2, shiftY: 3, yaw: -4, pitch: 0, roll: -8, depth: 1, scaleX: 1, scaleY: 1 }),
+    lower: Object.freeze({ shiftX: -2, shiftY: 1, yaw: -4, pitch: 0, roll: -2, depth: 1, scaleX: 1, scaleY: 1 })
+  }),
+  cross_left: Object.freeze({
+    className: 'cross-left',
+    chair: Object.freeze({ shiftX: 0, shiftY: 0, yaw: 0, pitch: 0, roll: 0, depth: 0, scaleX: 1, scaleY: 1 }),
+    upper: Object.freeze({ shiftX: 2, shiftY: 0, yaw: 5, pitch: 1, roll: 4, depth: 1, scaleX: 1, scaleY: 1 }),
+    head: Object.freeze({ shiftX: 2, shiftY: -2, yaw: 5, pitch: 0, roll: 5, depth: 1, scaleX: 0.99, scaleY: 1.01 }),
+    leftArm: Object.freeze({ shiftX: 2, shiftY: 3, yaw: 4, pitch: 0, roll: 8, depth: 1, scaleX: 1, scaleY: 1 }),
+    rightArm: Object.freeze({ shiftX: 1, shiftY: 1, yaw: 2, pitch: 0, roll: -6, depth: 0, scaleX: 1, scaleY: 1 }),
+    lower: Object.freeze({ shiftX: 2, shiftY: 1, yaw: 4, pitch: 0, roll: 2, depth: 1, scaleX: 1, scaleY: 1 })
+  })
+});
 
 function setElementClass(element, className) {
   if (!element) return;
@@ -2254,6 +2396,64 @@ function setElementClass(element, className) {
   element.className = className;
 }
 
+function setElementTransform(element, transform) {
+  if (!element) return;
+  element.style.transform = transform || '';
+}
+
+function interpolatePoseVector(target = {}, intensity = 1) {
+  const t = clamp(intensity, 0, 1);
+  return {
+    shiftX: (target.shiftX || 0) * t,
+    shiftY: (target.shiftY || 0) * t,
+    yaw: (target.yaw || 0) * t,
+    pitch: (target.pitch || 0) * t,
+    roll: (target.roll || 0) * t,
+    depth: (target.depth || 0) * t,
+    scaleX: 1 + ((target.scaleX || 1) - 1) * t,
+    scaleY: 1 + ((target.scaleY || 1) - 1) * t
+  };
+}
+
+function projectPoseTransform(target = {}, intensity = 1, extra = {}) {
+  const pose = interpolatePoseVector(target, intensity);
+  const tx = pose.shiftX + pose.yaw * 0.34 + pose.depth * 0.24 + (extra.shiftX || 0);
+  const ty = pose.shiftY + pose.pitch * 0.26 - pose.depth * 0.12 + Math.abs(pose.roll) * 0.04 + (extra.shiftY || 0);
+  const rotate = pose.roll * 0.78 + pose.yaw * 0.08 + (extra.rotate || 0);
+  const skewX = pose.yaw * -0.58 + (extra.skewX || 0);
+  const scaleX = pose.scaleX * (1 - Math.abs(pose.yaw) * 0.004) * (extra.scaleX || 1);
+  const scaleY = pose.scaleY * (1 + pose.pitch * 0.003) * (extra.scaleY || 1);
+  return `translate(${tx.toFixed(2)}px, ${ty.toFixed(2)}px) rotate(${rotate.toFixed(2)}deg) skewX(${skewX.toFixed(2)}deg) scale(${scaleX.toFixed(3)}, ${scaleY.toFixed(3)})`;
+}
+
+function computeProjectedPose(postureId, score = 0, confident = false, tentative = false) {
+  const preset = PROJECTED_POSE_PRESETS[postureId] || PROJECTED_POSE_PRESETS.neutral;
+  const baseStrength = confident ? 0.82 : tentative ? 0.58 : 0.42;
+  const confidenceBoost = clamp((score - POSTURE_CONF_LOW) / (1 - POSTURE_CONF_LOW), 0, 1);
+  const intensity = postureId ? clamp(baseStrength + confidenceBoost * 0.28, 0.35, 1) : 0;
+
+  return {
+    className: preset.className || '',
+    chair: projectPoseTransform(preset.chair, intensity, { scaleY: 1 }),
+    upper: projectPoseTransform(preset.upper, intensity, { scaleY: 1 }),
+    head: projectPoseTransform(preset.head, intensity, { scaleX: 1.02, scaleY: 1.02 }),
+    leftArm: projectPoseTransform(preset.leftArm, intensity),
+    rightArm: projectPoseTransform(preset.rightArm, intensity),
+    lower: projectPoseTransform(preset.lower, intensity)
+  };
+}
+
+function renderProjectedPose(postureId, score = 0, confident = false, tentative = false) {
+  const pose = computeProjectedPose(postureId, score, confident, tentative);
+  setElementClass($postureSilhouette, `posture-silhouette${pose.className ? ` ${pose.className}` : ''}`);
+  setElementTransform($poseChair, pose.chair);
+  setElementTransform($poseUpperBody, pose.upper);
+  setElementTransform($poseHeadGroup, pose.head);
+  setElementTransform($poseLeftArmGroup, pose.leftArm);
+  setElementTransform($poseRightArmGroup, pose.rightArm);
+  setElementTransform($poseLowerBody, pose.lower);
+}
+
 function updatePostureCard(result) {
   if (!result || !result.primary) {
     $postureLabel.textContent = 'Monitoring\u2026';
@@ -2261,8 +2461,7 @@ function updatePostureCard(result) {
     $postureBarFill.style.width = '0%';
     $posturePct.textContent = '';
     $postureSecondary.textContent = '';
-    $postureSilhouette.style.transform = '';
-    setElementClass($postureSilhouette, 'posture-silhouette');
+    renderProjectedPose(null, 0, false, false);
     return;
   }
 
@@ -2293,12 +2492,7 @@ function updatePostureCard(result) {
 
   // Silhouette transform
   const postureId = primary.proto.id;
-  $postureSilhouette.style.transform = SILHOUETTE_TRANSFORMS[postureId] || '';
-
-  // Leg swap for cross-leg postures
-  setElementClass($postureSilhouette, 'posture-silhouette' +
-    (postureId === 'cross_right' ? ' cross-right' : '') +
-    (postureId === 'cross_left' ? ' cross-left' : ''));
+  renderProjectedPose(postureId, primary.score, primary.confident, primary.tentative);
 }
 
 function updateMotorReasonBadge() {

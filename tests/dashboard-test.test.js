@@ -1,10 +1,18 @@
-const test = require('node:test');
+﻿const test = require('node:test');
 const assert = require('node:assert/strict');
 
 const { loadDashboard } = require('./helpers/load-dashboard');
 
 function scalePrototype(proto) {
   return proto.vec.map(value => Math.round(value * 1023));
+}
+
+function parseTranslateXY(transform) {
+  const match = /translate\(([-\d.]+)px,\s*([-\d.]+)px\)/.exec(transform);
+  return {
+    x: Number(match[1]),
+    y: Number(match[2])
+  };
 }
 
 test('built-in dashboard self-tests pass', () => {
@@ -59,6 +67,24 @@ test('updatePostureSmoothed stabilizes after repeated frames and resets on empty
   assert.equal(postureState.currentId, null);
   assert.equal(postureState.pendingId, null);
   assert.equal(postureState.pendingTicks, 0);
+});
+
+test('computeProjectedPose separates left-right, forward-back, and cross-leg silhouettes', () => {
+  const { hooks } = loadDashboard();
+  const neutral = hooks.computeProjectedPose(null, 0, false, false);
+  const left = hooks.computeProjectedPose('lean_left', 0.92, true, false);
+  const right = hooks.computeProjectedPose('lean_right', 0.92, true, false);
+  const forward = hooks.computeProjectedPose('lean_forward', 0.94, true, false);
+  const back = hooks.computeProjectedPose('lean_back', 0.94, true, false);
+  const crossRight = hooks.computeProjectedPose('cross_right', 0.9, true, false);
+  const crossLeft = hooks.computeProjectedPose('cross_left', 0.9, true, false);
+
+  assert.ok(parseTranslateXY(left.upper).x < parseTranslateXY(neutral.upper).x);
+  assert.ok(parseTranslateXY(right.upper).x > parseTranslateXY(neutral.upper).x);
+  assert.ok(parseTranslateXY(forward.head).y > parseTranslateXY(neutral.head).y);
+  assert.ok(parseTranslateXY(back.head).y < parseTranslateXY(neutral.head).y);
+  assert.equal(crossRight.className, 'cross-right');
+  assert.equal(crossLeft.className, 'cross-left');
 });
 
 test('onData updates stats and zone cards from the latest frame without waiting for the render loop', () => {
