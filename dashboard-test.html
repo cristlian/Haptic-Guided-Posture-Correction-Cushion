@@ -123,15 +123,6 @@ body::before {
   border: 1px solid var(--border-light);
 }
 
-.scenario-badge {
-  background: var(--bg-card);
-  padding: 4px 12px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-light);
-  cursor: default;
-  transition: background var(--transition-fast);
-}
-
 .header-right {
   display: flex;
   align-items: center;
@@ -157,28 +148,12 @@ body::before {
   color: var(--text-secondary);
 }
 
-.scenario-select {
-  font-family: var(--font-heading);
-  font-size: 12px;
-  padding: 4px 8px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--bg-card);
-  color: var(--text-primary);
-  cursor: pointer;
-  outline: none;
-}
-
-.scenario-select:hover {
-  background: var(--bg-card-hover);
-}
-
 /* ═══════════════════════════════════════════════════════
    MAIN LAYOUT
    ═══════════════════════════════════════════════════════ */
 .main {
   display: grid;
-  grid-template-columns: 200px 1fr 220px;
+  grid-template-columns: 200px 1fr 240px;
   grid-template-rows: 1fr auto;
   height: calc(100vh - 52px);
   gap: 0;
@@ -432,7 +407,7 @@ body::before {
 
 .motor-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 6px;
 }
 
@@ -441,17 +416,11 @@ body::before {
   border-radius: var(--radius-sm);
   border: 1.5px solid var(--border);
   background: var(--bg-base);
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all var(--transition-fast);
   position: relative;
-}
-
-.motor-btn:hover {
-  border-color: var(--motor-blue);
-  background: var(--motor-blue-light);
 }
 
 .motor-btn.active {
@@ -579,6 +548,139 @@ body::before {
 }
 
 /* ═══════════════════════════════════════════════════════
+   POSTURE DETECTION CARD
+   ═══════════════════════════════════════════════════════ */
+.posture-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  text-align: center;
+}
+
+.posture-card-title {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-tertiary);
+  margin-bottom: 8px;
+}
+
+.posture-silhouette-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.posture-silhouette {
+  width: 64px;
+  height: 88px;
+  transition: transform 600ms ease;
+}
+
+.posture-silhouette .body-fill {
+  fill: var(--text-secondary);
+  opacity: 0.55;
+}
+
+.posture-silhouette .leg-normal { display: block; }
+.posture-silhouette .leg-cross-r,
+.posture-silhouette .leg-cross-l { display: none; }
+
+.posture-silhouette.cross-right .leg-normal { display: none; }
+.posture-silhouette.cross-right .leg-cross-r { display: block; }
+
+.posture-silhouette.cross-left .leg-normal { display: none; }
+.posture-silhouette.cross-left .leg-cross-l { display: block; }
+
+.posture-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  min-height: 20px;
+}
+
+.posture-label.tentative {
+  font-style: italic;
+  opacity: 0.65;
+}
+
+.posture-label.uncertain {
+  font-weight: 400;
+  color: var(--text-tertiary);
+  font-size: 12px;
+}
+
+.posture-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.posture-bar-track {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border-light);
+  overflow: hidden;
+}
+
+.posture-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--pressure-4);
+  transition: width 400ms ease, opacity 400ms ease;
+  width: 0%;
+}
+
+.posture-bar-fill.tentative {
+  opacity: 0.5;
+}
+
+.posture-bar-pct {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  min-width: 32px;
+  text-align: right;
+}
+
+.posture-secondary {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+  min-height: 14px;
+}
+
+/* Motor reason badge */
+.motor-reason {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--motor-blue);
+  background: var(--motor-blue-light);
+  padding: 3px 8px;
+  border-radius: 20px;
+  text-align: center;
+  margin-bottom: 8px;
+  transition: opacity var(--transition-med), max-height var(--transition-med);
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  padding: 0 8px;
+}
+
+.motor-reason.visible {
+  max-height: 30px;
+  opacity: 1;
+  padding: 3px 8px;
+}
+
+/* ═══════════════════════════════════════════════════════
    BOTTOM — TIMELINE DRAWER
    ═══════════════════════════════════════════════════════ */
 .timeline-drawer {
@@ -671,12 +773,7 @@ body::before {
 
 .motor-dot {
   fill: var(--border);
-  cursor: pointer;
   transition: fill var(--transition-fast);
-}
-
-.motor-dot:hover {
-  fill: var(--motor-blue);
 }
 
 .motor-dot.active {
@@ -768,26 +865,13 @@ body::before {
   </div>
   <div class="header-center">
     <div class="session-timer" id="sessionTimer">00:00:00</div>
-    <div class="scenario-badge" id="scenarioBadge">Initializing…</div>
   </div>
   <div class="header-right">
     <button id="connectBtn" style="padding: 4px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-card); cursor: pointer; font-family: var(--font-heading); font-size: 12px;">
       Connect Hardware
     </button>
     <div class="status-dot"></div>
-    <span class="status-label">Mock Mode</span>
-    <select class="scenario-select" id="scenarioSelect">
-      <option value="auto">Auto Cycle</option>
-      <option value="empty">Empty Seat</option>
-      <option value="sit_down">Sit Down</option>
-      <option value="normal">Normal Seated</option>
-      <option value="lean_right">Lean Right</option>
-      <option value="lean_left">Lean Left</option>
-      <option value="cross_left">Cross-Legged L</option>
-      <option value="cross_right">Cross-Legged R</option>
-      <option value="prolonged">Prolonged Static</option>
-      <option value="stand_up">Stand Up</option>
-    </select>
+    <span class="status-label">Hardware Ready</span>
   </div>
 </header>
 
@@ -858,90 +942,73 @@ body::before {
 
         <!-- Zone labels -->
         <g id="zoneLabels">
-          <text class="zone-label" x="130" y="65">Back-L</text>
-          <text class="zone-label" x="370" y="65">Back-R</text>
-          <text class="zone-label" x="90" y="180">Hip-L</text>
-          <text class="zone-label" x="210" y="180">Thigh-L</text>
-          <text class="zone-label" x="290" y="180">Thigh-R</text>
-          <text class="zone-label" x="410" y="180">Hip-R</text>
-          <text class="zone-label" x="130" y="320">Front-L</text>
-          <text class="zone-label" x="370" y="320">Front-R</text>
+          <text class="zone-label" x="130" y="65">Back-R</text>
+          <text class="zone-label" x="370" y="65">Back-L</text>
+          <text class="zone-label" x="90" y="180">Hip-R</text>
+          <text class="zone-label" x="210" y="180">Thigh-R</text>
+          <text class="zone-label" x="290" y="180">Thigh-L</text>
+          <text class="zone-label" x="410" y="180">Hip-L</text>
+          <text class="zone-label" x="130" y="320">Front-R</text>
+          <text class="zone-label" x="370" y="320">Front-L</text>
         </g>
 
-        <!-- MOTOR INDICATORS -->
+        <!-- MOTOR INDICATORS (8 motors) -->
         <g id="motorsGroup" clip-path="url(#cushionClip)">
-          <!-- Square Motors (S0–S4): arranged across mid-section -->
-          <!-- S0: left-back area -->
+          <!-- C0: Back-Right -->
           <g class="motor-group-svg" data-motor="0">
             <circle class="motor-ring ring1" cx="90" cy="60" r="6"/>
             <circle class="motor-ring ring2" cx="90" cy="60" r="6"/>
             <g class="motor-wobble"><circle class="motor-dot" cx="90" cy="60" r="5"/></g>
-            <text class="motor-label" x="90" y="76">S0</text>
+            <text class="motor-label" x="90" y="76">C0</text>
           </g>
-          <!-- S1: center-back -->
+          <!-- S0: Back-Center -->
           <g class="motor-group-svg" data-motor="1">
             <circle class="motor-ring ring1" cx="250" cy="60" r="6"/>
             <circle class="motor-ring ring2" cx="250" cy="60" r="6"/>
             <g class="motor-wobble"><circle class="motor-dot" cx="250" cy="60" r="5"/></g>
-            <text class="motor-label" x="250" y="76">S1</text>
+            <text class="motor-label" x="250" y="76">S0</text>
           </g>
-          <!-- S2: right-back -->
+          <!-- C2: Back-Left -->
           <g class="motor-group-svg" data-motor="2">
             <circle class="motor-ring ring1" cx="410" cy="60" r="6"/>
             <circle class="motor-ring ring2" cx="410" cy="60" r="6"/>
             <g class="motor-wobble"><circle class="motor-dot" cx="410" cy="60" r="5"/></g>
-            <text class="motor-label" x="410" y="76">S2</text>
+            <text class="motor-label" x="410" y="76">C2</text>
           </g>
-          <!-- S3: left-mid -->
+          <!-- C1: Hip-Right -->
           <g class="motor-group-svg" data-motor="3">
             <circle class="motor-ring ring1" cx="90" cy="175" r="6"/>
             <circle class="motor-ring ring2" cx="90" cy="175" r="6"/>
             <g class="motor-wobble"><circle class="motor-dot" cx="90" cy="175" r="5"/></g>
-            <text class="motor-label" x="90" y="191">S3</text>
+            <text class="motor-label" x="90" y="191">C1</text>
           </g>
-          <!-- S4: right-mid -->
+          <!-- S1: Thigh-Center -->
           <g class="motor-group-svg" data-motor="4">
-            <circle class="motor-ring ring1" cx="410" cy="175" r="6"/>
-            <circle class="motor-ring ring2" cx="410" cy="175" r="6"/>
-            <g class="motor-wobble"><circle class="motor-dot" cx="410" cy="175" r="5"/></g>
-            <text class="motor-label" x="410" y="191">S4</text>
-          </g>
-
-          <!-- Cylindrical Motors (C0–C4): arranged in lower section -->
-          <!-- C0: left-front -->
-          <g class="motor-group-svg" data-motor="5">
-            <circle class="motor-ring ring1" cx="90" cy="310" r="6"/>
-            <circle class="motor-ring ring2" cx="90" cy="310" r="6"/>
-            <g class="motor-wobble"><circle class="motor-dot" cx="90" cy="310" r="5"/></g>
-            <text class="motor-label" x="90" y="326">C0</text>
-          </g>
-          <!-- C1: center-left-front -->
-          <g class="motor-group-svg" data-motor="6">
-            <circle class="motor-ring ring1" cx="190" cy="310" r="6"/>
-            <circle class="motor-ring ring2" cx="190" cy="310" r="6"/>
-            <g class="motor-wobble"><circle class="motor-dot" cx="190" cy="310" r="5"/></g>
-            <text class="motor-label" x="190" y="326">C1</text>
-          </g>
-          <!-- C2: center-front -->
-          <g class="motor-group-svg" data-motor="7">
             <circle class="motor-ring ring1" cx="250" cy="175" r="6"/>
             <circle class="motor-ring ring2" cx="250" cy="175" r="6"/>
             <g class="motor-wobble"><circle class="motor-dot" cx="250" cy="175" r="5"/></g>
-            <text class="motor-label" x="250" y="191">C2</text>
+            <text class="motor-label" x="250" y="191">S1</text>
           </g>
-          <!-- C3: center-right-front -->
-          <g class="motor-group-svg" data-motor="8">
-            <circle class="motor-ring ring1" cx="310" cy="310" r="6"/>
-            <circle class="motor-ring ring2" cx="310" cy="310" r="6"/>
-            <g class="motor-wobble"><circle class="motor-dot" cx="310" cy="310" r="5"/></g>
-            <text class="motor-label" x="310" y="326">C3</text>
+          <!-- C3: Hip-Left -->
+          <g class="motor-group-svg" data-motor="5">
+            <circle class="motor-ring ring1" cx="410" cy="175" r="6"/>
+            <circle class="motor-ring ring2" cx="410" cy="175" r="6"/>
+            <g class="motor-wobble"><circle class="motor-dot" cx="410" cy="175" r="5"/></g>
+            <text class="motor-label" x="410" y="191">C3</text>
           </g>
-          <!-- C4: right-front -->
-          <g class="motor-group-svg" data-motor="9">
-            <circle class="motor-ring ring1" cx="410" cy="310" r="6"/>
-            <circle class="motor-ring ring2" cx="410" cy="310" r="6"/>
-            <g class="motor-wobble"><circle class="motor-dot" cx="410" cy="310" r="5"/></g>
-            <text class="motor-label" x="410" y="326">C4</text>
+          <!-- S2: Front-Right -->
+          <g class="motor-group-svg" data-motor="6">
+            <circle class="motor-ring ring1" cx="130" cy="310" r="6"/>
+            <circle class="motor-ring ring2" cx="130" cy="310" r="6"/>
+            <g class="motor-wobble"><circle class="motor-dot" cx="130" cy="310" r="5"/></g>
+            <text class="motor-label" x="130" y="326">S2</text>
+          </g>
+          <!-- S3: Front-Left -->
+          <g class="motor-group-svg" data-motor="7">
+            <circle class="motor-ring ring1" cx="370" cy="310" r="6"/>
+            <circle class="motor-ring ring2" cx="370" cy="310" r="6"/>
+            <g class="motor-wobble"><circle class="motor-dot" cx="370" cy="310" r="5"/></g>
+            <text class="motor-label" x="370" y="326">S3</text>
           </g>
         </g>
       </svg>
@@ -963,15 +1030,59 @@ body::before {
 
   <!-- RIGHT SIDEBAR -->
   <aside class="sidebar-right">
-    <div class="sidebar-title">Motor Controls</div>
-
-    <div class="motor-group">
-      <div class="motor-group-title">Square (S0–S4)</div>
-      <div class="motor-grid" id="squareMotorGrid"></div>
+    <!-- Posture Detection Card -->
+    <div class="posture-card" id="postureCard">
+      <div class="posture-card-title">Posture Detection</div>
+      <div class="posture-silhouette-wrap">
+        <svg class="posture-silhouette" id="postureSilhouette" viewBox="0 0 64 88" fill="none">
+          <!-- Head -->
+          <circle class="body-fill" cx="32" cy="10" r="8"/>
+          <!-- Neck -->
+          <rect class="body-fill" x="29" y="18" width="6" height="4" rx="2"/>
+          <!-- Torso -->
+          <rect class="body-fill" x="20" y="22" width="24" height="24" rx="4"/>
+          <!-- Left arm -->
+          <rect class="body-fill" x="10" y="24" width="10" height="5" rx="2.5" transform="rotate(-10 15 26.5)"/>
+          <!-- Right arm -->
+          <rect class="body-fill" x="44" y="24" width="10" height="5" rx="2.5" transform="rotate(10 49 26.5)"/>
+          <!-- Normal legs -->
+          <g class="leg-normal">
+            <rect class="body-fill" x="21" y="46" width="9" height="20" rx="3"/>
+            <rect class="body-fill" x="34" y="46" width="9" height="20" rx="3"/>
+            <rect class="body-fill" x="20" y="64" width="10" height="8" rx="3"/>
+            <rect class="body-fill" x="34" y="64" width="10" height="8" rx="3"/>
+          </g>
+          <!-- Cross-leg right (R over L) -->
+          <g class="leg-cross-r">
+            <rect class="body-fill" x="21" y="46" width="9" height="20" rx="3"/>
+            <rect class="body-fill" x="28" y="46" width="9" height="18" rx="3" transform="rotate(20 32 55)"/>
+            <rect class="body-fill" x="20" y="64" width="10" height="8" rx="3"/>
+          </g>
+          <!-- Cross-leg left (L over R) -->
+          <g class="leg-cross-l">
+            <rect class="body-fill" x="34" y="46" width="9" height="20" rx="3"/>
+            <rect class="body-fill" x="27" y="46" width="9" height="18" rx="3" transform="rotate(-20 32 55)"/>
+            <rect class="body-fill" x="34" y="64" width="10" height="8" rx="3"/>
+          </g>
+        </svg>
+      </div>
+      <div class="posture-label uncertain" id="postureLabel">Monitoring\u2026</div>
+      <div class="posture-bar-wrap">
+        <div class="posture-bar-track">
+          <div class="posture-bar-fill" id="postureBarFill"></div>
+        </div>
+        <span class="posture-bar-pct" id="posturePct"></span>
+      </div>
+      <div class="posture-secondary" id="postureSecondary"></div>
     </div>
 
+    <div class="sidebar-title">Motor Status</div>
+
     <div class="motor-group">
-      <div class="motor-group-title">Cylindrical (C0–C4)</div>
+      <div class="motor-reason" id="motorReason"></div>
+      <div class="motor-group-title">Square · S0 S1 S2 S3</div>
+      <div class="motor-grid" id="squareMotorGrid"></div>
+      <div class="motor-group-title" style="margin-top:8px">Cylindrical · C0 C1 C2 C3</div>
       <div class="motor-grid" id="cylMotorGrid"></div>
     </div>
 
@@ -1031,9 +1142,7 @@ body::before {
 
 /* ─── CONFIGURATION ─── */
 const ZONE_NAMES = [
-  'Back-Left', 'Back-Right',
-  'Hip-Left', 'Thigh-Left', 'Thigh-Right', 'Hip-Right',
-  'Front-Left', 'Front-Right'
+  'Back-Right', 'Back-Left','Hip-Right', 'Thigh-Right', 'Thigh-Left', 'Hip-Left','Front-Right', 'Front-Left'
 ];
 
 const ZONE_COLORS = [
@@ -1045,27 +1154,29 @@ const ZONE_COLORS = [
   [185,28,58]    // 5: crimson (#B91C3A)
 ];
 
-const MOTOR_LABELS = ['S0','S1','S2','S3','S4','C0','C1','C2','C3','C4'];
+const MOTOR_LABELS = ['C0','S0','C2','C1','S1','C3','S2','S3'];
 
 const SPARKLINE_HISTORY = 60; // data points per zone sparkline
 const TIMELINE_HISTORY = 300; // 30s at 10Hz
 
 /* SENSEGRID LIVE FSR TRANSFORM START */
-const LIVE_FSR_RAW_TO_ZONE_MAP = Object.freeze([6, 7, 5, 4, 3, 2, 0, 1]);
+const LIVE_FSR_RAW_TO_ZONE_MAP = Object.freeze([7, 6, 5, 4, 3, 2, 1, 0]);
 const LIVE_FSR_HISTORY_SIZE = 48;
 const LIVE_FSR_EMPTY_MAX = 12;
 const LIVE_FSR_EMPTY_SUM = 36;
 const LIVE_FSR_MIN_DYNAMIC_HEADROOM = 60;
 const LIVE_FSR_GAIN_EXPONENT = 0.58;
 const LIVE_FSR_BLEED_MATRIX = Object.freeze([
-  Object.freeze([0.72, 0.02, 0.16, 0.07, 0.00, 0.00, 0.03, 0.00]),
-  Object.freeze([0.02, 0.72, 0.00, 0.00, 0.07, 0.16, 0.00, 0.03]),
-  Object.freeze([0.09, 0.01, 0.72, 0.08, 0.02, 0.05, 0.03, 0.00]),
-  Object.freeze([0.02, 0.00, 0.08, 0.72, 0.05, 0.02, 0.11, 0.00]),
-  Object.freeze([0.00, 0.02, 0.02, 0.05, 0.72, 0.08, 0.00, 0.11]),
-  Object.freeze([0.01, 0.09, 0.05, 0.02, 0.08, 0.72, 0.00, 0.03]),
-  Object.freeze([0.03, 0.00, 0.08, 0.15, 0.02, 0.00, 0.72, 0.00]),
-  Object.freeze([0.00, 0.03, 0.00, 0.02, 0.15, 0.08, 0.00, 0.72])
+
+//               B-R , B-L , H-R , T-R , T-L , H-L , F-R , F-L
+  Object.freeze([0.70, 0.00, 0.15, 0.15, 0.00, 0.00, 0.03, 0.00]), // Back-Right
+  Object.freeze([0.00, 0.70, 0.00, 0.00, 0.15, 0.15, 0.00, 0.00]), // Back-Left
+  Object.freeze([0.10, 0.00, 0.70, 0.10, 0.00, 0.00, 0.10, 0.00]), // Hip-Right
+  Object.freeze([0.08, 0.00, 0.08, 0.70, 0.08, 0.00, 0.06, 0.00]), // Thigh-Right
+  Object.freeze([0.00, 0.08, 0.00, 0.08, 0.70, 0.08, 0.00, 0.06]), // Thigh-Left
+  Object.freeze([0.00, 0.10, 0.00, 0.00, 0.10, 0.70, 0.00, 0.10]), // Hip-Left
+  Object.freeze([0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 0.00]), // Front-Right
+  Object.freeze([0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00])  // Front-Left
 ]);
 
 function clamp(value, min, max) {
@@ -1297,20 +1408,179 @@ if (typeof globalThis !== 'undefined') {
 }
 /* SENSEGRID LIVE FSR TRANSFORM END */
 
+/* ═══════════════════════════════════════════════════════
+   POSTURE PREDICTION MODULE
+   ═══════════════════════════════════════════════════════ */
+
+const POSTURE_PROTOTYPES = Object.freeze([
+  { id: 'lean_left',    label: 'Lean Left',      vec: [0.05, 0.90, 0.05, 0.05, 0.55, 0.75, 0.05, 0.05] },
+  { id: 'lean_right',   label: 'Lean Right',     vec: [0.90, 0.05, 0.75, 0.55, 0.05, 0.05, 0.05, 0.05] },
+  { id: 'lean_forward', label: 'Lean Forward',   vec: [0.05, 0.05, 0.38, 0.38, 0.38, 0.38, 0.90, 0.90] },
+  { id: 'lean_back',    label: 'Lean Back',      vec: [0.90, 0.90, 0.55, 0.38, 0.38, 0.55, 0.05, 0.05] },
+  { id: 'cross_right',  label: 'Cross-leg \u00b7 R', vec: [0.05, 0.55, 0.05, 0.05, 0.90, 0.90, 0.05, 0.55] },
+  { id: 'cross_left',   label: 'Cross-leg \u00b7 L', vec: [0.55, 0.05, 0.90, 0.90, 0.05, 0.05, 0.55, 0.05] }
+]);
+
+// Confidence thresholds derived from inter-prototype cosine similarity analysis.
+// Hardest pair: lean_left ↔ lean_back at ~0.74 cosine similarity.
+// CONF_HIGH (0.78) sits above that ceiling to avoid misclassification.
+const POSTURE_CONF_HIGH   = 0.78;
+const POSTURE_CONF_LOW    = 0.62;
+const POSTURE_MARGIN_HIGH = 0.18;
+const POSTURE_MARGIN_LOW  = 0.10;
+const POSTURE_EMA_ALPHA   = 0.30;
+const POSTURE_PERSIST_TICKS = 5;   // 500ms at 10Hz
+const POSTURE_OVERRIDE_MARGIN = 0.20;
+const POSTURE_EMPTY_NORM  = 0.15;
+
+// Pre-compute L2-normalised unit vectors for each prototype
+const POSTURE_UNIT_VECS = POSTURE_PROTOTYPES.map(p => {
+  const v = p.vec;
+  const norm = Math.sqrt(v.reduce((s, x) => s + x * x, 0));
+  return v.map(x => x / norm);
+});
+
+// Motor routing: posture id → [8-motor bitmask], reason string
+const MOTOR_ROUTING = Object.freeze({
+  lean_left:    { motors: [0,0,1,0,1,1,0,0], reason: '\u2190 Left lean' },
+  lean_right:   { motors: [1,0,0,1,1,0,0,0], reason: '\u2192 Right lean' },
+  lean_forward: { motors: [0,0,0,0,1,0,1,1], reason: '\u2191 Forward lean' },
+  lean_back:    { motors: [1,1,1,0,0,0,0,0], reason: '\u2193 Back pressure' },
+  cross_right:  { motors: [0,0,1,0,0,1,0,1], reason: '\u2715 Cross-leg left' },
+  cross_left:   { motors: [1,0,0,1,0,0,1,0], reason: '\u2715 Cross-leg right' }
+});
+
+function predictPosture(fsrValues) {
+  // Normalise FSR [0-1023] → [0-1]
+  const p = new Float32Array(8);
+  for (let i = 0; i < 8; i++) p[i] = fsrValues[i] / 1023;
+
+  const norm = Math.sqrt(p.reduce((s, x) => s + x * x, 0));
+  if (norm < POSTURE_EMPTY_NORM) {
+    return { primary: null, secondary: null, scores: new Float32Array(6) };
+  }
+
+  // Cosine similarity with each prototype
+  const scores = new Float32Array(6);
+  for (let j = 0; j < 6; j++) {
+    let dot = 0;
+    const uv = POSTURE_UNIT_VECS[j];
+    for (let i = 0; i < 8; i++) dot += p[i] * uv[i];
+    scores[j] = dot / norm;
+  }
+
+  // Rank
+  const indices = [0,1,2,3,4,5].sort((a, b) => scores[b] - scores[a]);
+  const margin = scores[indices[0]] - scores[indices[1]];
+  const topScore = scores[indices[0]];
+
+  const confident = topScore > POSTURE_CONF_HIGH && margin > POSTURE_MARGIN_HIGH;
+  const tentative = topScore > POSTURE_CONF_LOW  && margin > POSTURE_MARGIN_LOW;
+
+  return {
+    primary:   { proto: POSTURE_PROTOTYPES[indices[0]], score: topScore, confident, tentative },
+    secondary: { proto: POSTURE_PROTOTYPES[indices[1]], score: scores[indices[1]] },
+    margin,
+    scores
+  };
+}
+
+function createPostureState() {
+  return {
+    smoothedScores: new Float32Array(6),
+    currentId: null,
+    pendingId: null,
+    pendingTicks: 0,
+    displayResult: null   // cached result for UI
+  };
+}
+
+function updatePostureSmoothed(postureState, rawResult) {
+  const ps = postureState;
+  const alpha = POSTURE_EMA_ALPHA;
+
+  // EMA on raw scores
+  for (let j = 0; j < 6; j++) {
+    ps.smoothedScores[j] = ps.smoothedScores[j] * (1 - alpha) + rawResult.scores[j] * alpha;
+  }
+
+  // Re-rank smoothed scores
+  const indices = [0,1,2,3,4,5].sort((a, b) => ps.smoothedScores[b] - ps.smoothedScores[a]);
+  const topScore = ps.smoothedScores[indices[0]];
+  const margin = topScore - ps.smoothedScores[indices[1]];
+  const confident = topScore > POSTURE_CONF_HIGH && margin > POSTURE_MARGIN_HIGH;
+  const tentative = topScore > POSTURE_CONF_LOW  && margin > POSTURE_MARGIN_LOW;
+
+  const topId = POSTURE_PROTOTYPES[indices[0]].id;
+
+  // Label persistence logic
+  if (!rawResult.primary) {
+    // Empty seat → reset
+    ps.currentId = null;
+    ps.pendingId = null;
+    ps.pendingTicks = 0;
+    ps.displayResult = null;
+    return null;
+  }
+
+  if (topId === ps.currentId) {
+    // Same label — keep it, reset pending
+    ps.pendingId = null;
+    ps.pendingTicks = 0;
+  } else if (topId === ps.pendingId) {
+    // Candidate is holding — count ticks
+    ps.pendingTicks++;
+    if (ps.pendingTicks >= POSTURE_PERSIST_TICKS ||
+        (topScore - (ps.smoothedScores[POSTURE_PROTOTYPES.findIndex(p => p.id === ps.currentId)] || 0)) > POSTURE_OVERRIDE_MARGIN) {
+      ps.currentId = topId;
+      ps.pendingId = null;
+      ps.pendingTicks = 0;
+    }
+  } else {
+    // New candidate
+    ps.pendingId = topId;
+    ps.pendingTicks = 1;
+  }
+
+  // If no current yet, accept immediately
+  if (!ps.currentId && (confident || tentative)) {
+    ps.currentId = topId;
+  }
+
+  const currentIdx = POSTURE_PROTOTYPES.findIndex(p => p.id === ps.currentId);
+  const currentScore = currentIdx >= 0 ? ps.smoothedScores[currentIdx] : 0;
+  const currentConfident = currentScore > POSTURE_CONF_HIGH && (currentScore - ps.smoothedScores[indices[currentIdx === indices[0] ? 1 : 0]]) > POSTURE_MARGIN_HIGH;
+  const currentTentative = currentScore > POSTURE_CONF_LOW;
+
+  ps.displayResult = ps.currentId ? {
+    primary: {
+      proto: POSTURE_PROTOTYPES.find(p => p.id === ps.currentId),
+      score: currentScore,
+      confident: currentConfident,
+      tentative: currentTentative
+    },
+    secondary: { proto: POSTURE_PROTOTYPES[indices[currentIdx === indices[0] ? 1 : 0]], score: ps.smoothedScores[indices[currentIdx === indices[0] ? 1 : 0]] },
+    margin
+  } : null;
+
+  return ps.displayResult;
+}
+
 /* ─── STATE ─── */
 const state = {
   fsr: new Float32Array(8),           // current interpolated values
   fsrTarget: new Float32Array(8),     // target values from data source
   fsrPrev: new Float32Array(8),       // previous tick values
-  motors: new Uint8Array(10),         // current motor states
-  motorManual: new Uint8Array(10),    // manually toggled motors
+  motors: new Uint8Array(8),           // current motor states
   threshold: 700,
   alertCount: 0,
   sessionStart: Date.now(),
   sparklines: Array.from({length: 8}, () => []),
   timeline: Array.from({length: 8}, () => []),
   interpT: 0,
-  expandedZone: -1
+  expandedZone: -1,
+  posture: createPostureState(),
+  motorReason: ''
 };
 
 /* ─── DATA SOURCE INTERFACE ─── */
@@ -1319,108 +1589,6 @@ class DataSource {
   start() {}
   stop() {}
   destroy() {}
-}
-
-/* ─── MOCK DATA SOURCE ─── */
-class MockDataSource extends DataSource {
-  constructor(onData) {
-    super(onData);
-    this._interval = null;
-    this._scenarioIndex = 0;
-    this._scenarioTimer = 0;
-    this._manualScenario = null;
-    this._currentProfile = new Float32Array(8);
-    this._targetProfile = new Float32Array(8);
-    this._profileT = 0;
-  }
-
-  get scenarios() {
-    return [
-      { name: 'empty',       label: 'Empty Seat',      duration: 3000, fsr: [0,0,0,0,0,0,0,0],                        motors: [0,0,0,0,0,0,0,0,0,0] },
-      { name: 'sit_down',    label: 'Sitting Down',     duration: 2500, fsr: [520,500,280,350,340,270,180,170],         motors: [0,0,0,0,0,0,0,0,0,0] },
-      { name: 'normal',      label: 'Normal Seated',    duration: 5000, fsr: [580,570,380,420,410,370,290,280],         motors: [0,0,0,0,0,0,0,0,0,0] },
-      { name: 'lean_right',  label: 'Leaning Right',    duration: 4000, fsr: [380,720,220,300,580,520,190,450],         motors: [0,0,1,0,1,0,0,0,1,1] },
-      { name: 'lean_left',   label: 'Leaning Left',     duration: 4000, fsr: [720,380,520,580,300,220,450,190],         motors: [1,0,0,1,0,1,1,0,0,0] },
-      { name: 'cross_left',  label: 'Cross-Legged Left',duration: 4500, fsr: [440,650,180,220,560,480,120,420],         motors: [0,0,1,0,1,1,0,0,1,0] },
-      { name: 'cross_right', label: 'Cross-Legged Right',duration:4500, fsr: [650,440,480,560,220,180,420,120],         motors: [1,0,0,1,0,0,0,1,0,1] },
-      { name: 'prolonged',   label: 'Prolonged Static',  duration: 5500, fsr: [820,810,480,550,540,470,380,370],        motors: [1,1,1,0,0,0,0,1,0,0] },
-      { name: 'stand_up',    label: 'Standing Up',       duration: 2500, fsr: [60,50,30,40,35,25,20,15],               motors: [0,0,0,0,0,0,0,0,0,0] },
-    ];
-  }
-
-  setScenario(name) {
-    this._manualScenario = name === 'auto' ? null : name;
-    if (name !== 'auto') {
-      const sc = this.scenarios.find(s => s.name === name);
-      if (sc) {
-        this._transitionTo(sc);
-        this._scenarioTimer = 0;
-      }
-    }
-  }
-
-  _transitionTo(scenario) {
-    for (let i = 0; i < 8; i++) {
-      this._currentProfile[i] = state.fsrTarget[i];
-      this._targetProfile[i] = scenario.fsr[i];
-    }
-    this._profileT = 0;
-    this._activeScenario = scenario;
-  }
-
-  start() {
-    const sc = this.scenarios[0];
-    this._activeScenario = sc;
-    for (let i = 0; i < 8; i++) {
-      this._currentProfile[i] = sc.fsr[i];
-      this._targetProfile[i] = sc.fsr[i];
-    }
-    this._profileT = 1;
-    this._scenarioIndex = 0;
-    this._scenarioTimer = 0;
-
-    this._interval = setInterval(() => this._tick(), 100); // 10 Hz
-  }
-
-  _tick() {
-    const sc = this._activeScenario;
-
-    // Auto-cycle logic
-    if (!this._manualScenario) {
-      this._scenarioTimer += 100;
-      if (this._scenarioTimer >= sc.duration) {
-        this._scenarioTimer = 0;
-        this._scenarioIndex = (this._scenarioIndex + 1) % this.scenarios.length;
-        this._transitionTo(this.scenarios[this._scenarioIndex]);
-      }
-    }
-
-    // Smooth transition between profiles
-    this._profileT = Math.min(1, this._profileT + 0.06);
-    const ease = this._profileT < 0.5
-      ? 4 * this._profileT * this._profileT * this._profileT
-      : 1 - Math.pow(-2 * this._profileT + 2, 3) / 2;
-
-    const fsr = new Float32Array(8);
-    for (let i = 0; i < 8; i++) {
-      const base = this._currentProfile[i] + (this._targetProfile[i] - this._currentProfile[i]) * ease;
-      // Add subtle noise for realism
-      const noise = (Math.random() - 0.5) * 20;
-      fsr[i] = Math.max(0, Math.min(1023, base + noise));
-    }
-
-    const motors = new Uint8Array(sc.motors);
-
-    this.onData({
-      timestamp: Date.now(),
-      fsr: Array.from(fsr),
-      motors: Array.from(motors),
-      scenario: sc.label
-    });
-  }
-
-  stop() { clearInterval(this._interval); }
-  destroy() { this.stop(); }
 }
 
 /* ─── REAL SERIAL DATA SOURCE ─── */
@@ -1449,14 +1617,12 @@ class SerialDataSource extends DataSource {
       this.reader = decoder.readable.getReader();
 
       this.connected = true;
-      document.getElementById('scenarioBadge').textContent = "Serial Connected";
       setDashboardModeLabel('Live Mode');
       this.readLoop();
       return true;
     } catch (err) {
       console.error("Connection failed:", err);
       this.connected = false;
-      document.getElementById('scenarioBadge').textContent = "Connection Error";
       setDashboardModeLabel('Connection Error');
       return false;
     }
@@ -1472,10 +1638,13 @@ class SerialDataSource extends DataSource {
           this.processBuffer();
         }
       } catch (error) {
-        console.error("Read error:", error);
+        console.error('Read error:', error);
         this.connected = false;
-        setDashboardModeLabel('Connection Error');
-        document.getElementById('scenarioBadge').textContent = "Connection Error";
+        setDashboardModeLabel('Connection Lost');
+        const btn = document.getElementById('connectBtn');
+        btn.textContent = 'Reconnect';
+        btn.style.background = 'var(--bg-card)';
+        btn.style.color = '';
         break;
       }
     }
@@ -1498,14 +1667,10 @@ class SerialDataSource extends DataSource {
       // 确保收到的是完整的 8 个通道数据
       if (!values) continue;
 
-      {
-        this.onData({
-          timestamp: Date.now(),
-          fsr: transformLiveFsrFrame(values, this.transformState),
-          motors: state.motors, // 保持当前的电机状态
-          scenario: 'Real-time Sensor'
-        });
-      }
+      this.onData({
+        timestamp: Date.now(),
+        fsr: transformLiveFsrFrame(values, this.transformState)
+      });
     }
   }
 
@@ -1541,8 +1706,6 @@ function pressureToColor(value) {
 
 /* ─── DOM REFERENCES ─── */
 const $timer = document.getElementById('sessionTimer');
-const $scenarioBadge = document.getElementById('scenarioBadge');
-const $scenarioSelect = document.getElementById('scenarioSelect');
 const $thresholdSlider = document.getElementById('thresholdSlider');
 const $thresholdVal = document.getElementById('thresholdVal');
 const $statAvg = document.getElementById('statAvg');
@@ -1569,7 +1732,6 @@ function setDashboardModeLabel(label) {
 }
 
 setDashboardModeLabel('Hardware Ready');
-$scenarioBadge.textContent = 'Hardware Ready';
 
 /* ─── BUILD ZONE CARDS ─── */
 function buildZoneCards() {
@@ -1619,22 +1781,28 @@ function buildZoneCards() {
   });
 }
 
-/* ─── BUILD MOTOR BUTTONS ─── */
+/* ─── BUILD MOTOR INDICATORS ─── */
 function buildMotorButtons() {
   const sqGrid = document.getElementById('squareMotorGrid');
   const cylGrid = document.getElementById('cylMotorGrid');
+  // Motor indices: [C0, S0, C2, C1, S1, C3, S2, S3]
+  // Square (S-type) at indices 1,4,6,7 — Cylindrical (C-type) at indices 0,2,3,5
+  const squareIndices = [1, 4, 6, 7]; // S0, S1, S2, S3
+  const cylIndices = [0, 2, 3, 5];    // C0, C2, C1, C3
 
-  for (let i = 0; i < 10; i++) {
-    const btn = document.createElement('button');
-    btn.className = 'motor-btn';
-    btn.innerHTML = `<div class="motor-btn-dot"></div><span class="motor-btn-label">${MOTOR_LABELS[i]}</span>`;
-    btn.addEventListener('click', () => {
-      state.motorManual[i] = state.motorManual[i] ? 0 : 1;
-      updateMotorVisuals();
-    });
-    if (i < 5) sqGrid.appendChild(btn);
-    else cylGrid.appendChild(btn);
-    $motorBtns.push(btn);
+  for (const i of squareIndices) {
+    const el = document.createElement('div');
+    el.className = 'motor-btn';
+    el.innerHTML = `<div class="motor-btn-dot"></div><span class="motor-btn-label">${MOTOR_LABELS[i]}</span>`;
+    sqGrid.appendChild(el);
+    $motorBtns[i] = el;
+  }
+  for (const i of cylIndices) {
+    const el = document.createElement('div');
+    el.className = 'motor-btn';
+    el.innerHTML = `<div class="motor-btn-dot"></div><span class="motor-btn-label">${MOTOR_LABELS[i]}</span>`;
+    cylGrid.appendChild(el);
+    $motorBtns[i] = el;
   }
 }
 
@@ -1677,17 +1845,6 @@ function initZoneTooltip() {
   });
 }
 
-/* ─── MOTOR CLICK ON SVG ─── */
-function initMotorClickSvg() {
-  $motorGroups.forEach((g, i) => {
-    const dot = g.querySelector('.motor-dot');
-    dot.addEventListener('click', () => {
-      state.motorManual[i] = state.motorManual[i] ? 0 : 1;
-      updateMotorVisuals();
-    });
-  });
-}
-
 /* ─── UPDATE FUNCTIONS ─── */
 function updateZoneFills() {
   for (let i = 0; i < 8; i++) {
@@ -1705,31 +1862,19 @@ function updateZoneFills() {
 }
 
 function updateMotorVisuals() {
-  for (let i = 0; i < 10; i++) {
-    const active = state.motors[i] || state.motorManual[i];
+  for (let i = 0; i < 8; i++) {
+    const active = state.motors[i];
     const g = $motorGroups[i];
+    if (!g) continue;
     const rings = g.querySelectorAll('.motor-ring');
     const dot = g.querySelector('.motor-dot');
     const wobble = g.querySelector('.motor-wobble');
 
-    rings.forEach(r => {
-      if (active) r.classList.add('active');
-      else r.classList.remove('active');
-    });
+    rings.forEach(r => r.classList.toggle('active', !!active));
+    dot.classList.toggle('active', !!active);
+    wobble.classList.toggle('active', !!active);
 
-    if (active) {
-      dot.classList.add('active');
-      wobble.classList.add('active');
-    } else {
-      dot.classList.remove('active');
-      wobble.classList.remove('active');
-    }
-
-    // Sidebar buttons
-    if ($motorBtns[i]) {
-      if (active) $motorBtns[i].classList.add('active');
-      else $motorBtns[i].classList.remove('active');
-    }
+    if ($motorBtns[i]) $motorBtns[i].classList.toggle('active', !!active);
   }
 }
 
@@ -1904,15 +2049,87 @@ function updateStats() {
   const avg = Math.round(values.reduce((a, b) => a + b, 0) / values.length);
   const peak = Math.round(Math.max(...values));
   const alerts = values.filter(v => v > state.threshold).length;
-  const motorsActive = Array.from(state.motors).reduce((a, b) => a + b, 0)
-    + Array.from(state.motorManual).reduce((a, b) => a + b, 0);
+  const motorsActive = Array.from(state.motors).reduce((a, b) => a + b, 0);
 
   $statAvg.textContent = avg;
   $statPeak.textContent = peak;
   $statAlerts.textContent = alerts;
-  $statMotors.textContent = Math.min(10, motorsActive);
+  $statMotors.textContent = Math.min(8, motorsActive);
 
   if (alerts > 0) state.alertCount++;
+}
+
+/* ─── POSTURE UI UPDATES ─── */
+const $postureLabel = document.getElementById('postureLabel');
+const $postureBarFill = document.getElementById('postureBarFill');
+const $posturePct = document.getElementById('posturePct');
+const $postureSecondary = document.getElementById('postureSecondary');
+const $postureSilhouette = document.getElementById('postureSilhouette');
+const $motorReason = document.getElementById('motorReason');
+
+const SILHOUETTE_TRANSFORMS = {
+  lean_left:    'rotate(-10deg)',
+  lean_right:   'rotate(10deg)',
+  lean_forward: 'translateY(-3px) scaleY(0.95)',
+  lean_back:    'translateY(2px) scaleY(1.04)',
+  cross_right:  'rotate(-5deg)',
+  cross_left:   'rotate(5deg)'
+};
+
+function updatePostureCard(result) {
+  if (!result || !result.primary) {
+    $postureLabel.textContent = 'Monitoring\u2026';
+    $postureLabel.className = 'posture-label uncertain';
+    $postureBarFill.style.width = '0%';
+    $posturePct.textContent = '';
+    $postureSecondary.textContent = '';
+    $postureSilhouette.style.transform = '';
+    $postureSilhouette.className = 'posture-silhouette';
+    return;
+  }
+
+  const { primary, secondary } = result;
+  const pct = Math.round(primary.score * 100);
+
+  // Label
+  $postureLabel.textContent = primary.proto.label;
+  if (primary.confident) {
+    $postureLabel.className = 'posture-label';
+  } else if (primary.tentative) {
+    $postureLabel.className = 'posture-label tentative';
+  } else {
+    $postureLabel.className = 'posture-label uncertain';
+  }
+
+  // Confidence bar
+  $postureBarFill.style.width = pct + '%';
+  $postureBarFill.className = primary.confident ? 'posture-bar-fill' : 'posture-bar-fill tentative';
+  $posturePct.textContent = pct + '%';
+
+  // Secondary
+  if (secondary && secondary.score > POSTURE_CONF_LOW) {
+    $postureSecondary.textContent = `2nd \u00b7 ${secondary.proto.label} \u00b7 ${Math.round(secondary.score * 100)}%`;
+  } else {
+    $postureSecondary.textContent = '';
+  }
+
+  // Silhouette transform
+  const postureId = primary.proto.id;
+  $postureSilhouette.style.transform = SILHOUETTE_TRANSFORMS[postureId] || '';
+
+  // Leg swap for cross-leg postures
+  $postureSilhouette.className = 'posture-silhouette' +
+    (postureId === 'cross_right' ? ' cross-right' : '') +
+    (postureId === 'cross_left' ? ' cross-left' : '');
+}
+
+function updateMotorReasonBadge() {
+  if (state.motorReason) {
+    $motorReason.textContent = state.motorReason;
+    $motorReason.classList.add('visible');
+  } else {
+    $motorReason.classList.remove('visible');
+  }
 }
 
 function updateSessionTimer() {
@@ -1932,13 +2149,24 @@ function onData(data) {
   }
   state.interpT = 0;
 
-  // Motors
-  for (let i = 0; i < 10; i++) {
-    state.motors[i] = data.motors[i];
+  // Posture prediction → motor routing
+  const rawPrediction = predictPosture(data.fsr);
+  const result = updatePostureSmoothed(state.posture, rawPrediction);
+
+  if (result && result.primary && result.primary.confident) {
+    const routing = MOTOR_ROUTING[result.primary.proto.id];
+    if (routing) {
+      for (let i = 0; i < 8; i++) state.motors[i] = routing.motors[i];
+      state.motorReason = routing.reason;
+    }
+  } else {
+    for (let i = 0; i < 8; i++) state.motors[i] = 0;
+    state.motorReason = '';
   }
 
-  // Scenario badge
-  $scenarioBadge.textContent = data.scenario;
+  // Update posture UI
+  updatePostureCard(result);
+  updateMotorReasonBadge();
 
   // Timeline
   updateTimeline(data);
@@ -1950,26 +2178,7 @@ function onData(data) {
   updateZoneCards();
 }
 
-/* ─── RENDER LOOP (60fps interpolation) ─── */
 let lastRenderTime = 0;
-function renderLoop(timestamp) {
-  requestAnimationFrame(renderLoop);
-
-  // Interpolate FSR values between ticks (100ms intervals → smooth 60fps)
-  state.interpT = Math.min(1, state.interpT + (timestamp - lastRenderTime) / 100);
-  lastRenderTime = timestamp;
-
-  const ease = state.interpT * state.interpT * (3 - 2 * state.interpT); // smoothstep
-  for (let i = 0; i < 8; i++) {
-    state.fsr[i] = state.fsrPrev[i] + (state.fsrTarget[i] - state.fsrPrev[i]) * ease;
-  }
-
-  updateZoneFills();
-  updateMotorVisuals();
-  drawSparklines();
-  drawTimeline();
-  updateSessionTimer();
-}
 
 /* ─── EVENT HANDLERS ─── */
 function initEvents() {
@@ -1982,20 +2191,6 @@ function initEvents() {
     $timelineDrawer.classList.toggle('expanded');
   });
 
-  $scenarioSelect.addEventListener('change', (e) => {
-    if (typeof mockSource !== 'undefined' && mockSource) {
-      mockSource.setScenario(e.target.value);
-      return;
-    }
-
-    if (serialSource && serialSource.connected) {
-      $scenarioBadge.textContent = 'Real-time Sensor';
-      return;
-    }
-
-    e.target.value = 'auto';
-    $scenarioBadge.textContent = 'Hardware Ready';
-  });
 }
 
 /* ─── ZONE CARD BORDER COLOR (pseudo-element workaround) ─── */
@@ -2014,9 +2209,6 @@ const dynamicStyle = document.createElement('style');
 dynamicStyle.textContent = `.zone-card::before { background: var(--zone-indicator, var(--pressure-0)) !important; }`;
 document.head.appendChild(dynamicStyle);
 
-// Add updateZoneCardColors to the render loop
-const _origRenderLoop = renderLoop;
-
 /* ─── BOOTSTRAP ─── */
 buildZoneCards();
 buildMotorButtons();
@@ -2025,7 +2217,6 @@ buildMotorButtons();
 requestAnimationFrame(() => {
   initSvgRefs();
   initZoneTooltip();
-  initMotorClickSvg();
   initEvents();
 
   // Enhanced render loop with zone card colors
@@ -2056,23 +2247,25 @@ requestAnimationFrame(() => {
   requestAnimationFrame(enhancedRenderLoop);
 });
 
-// Start mock data source
-// const mockSource = new MockDataSource(onData);
-// mockSource.start();
-
-const mockSource = null;
 let serialSource = null;
 
 document.getElementById('connectBtn').addEventListener('click', async () => {
-  if (!serialSource) {
+  const btn = document.getElementById('connectBtn');
+  if (serialSource && serialSource.connected) {
+    await serialSource.stop();
+    serialSource = null;
+    btn.textContent = 'Connect Hardware';
+    btn.style.background = 'var(--bg-card)';
+    btn.style.color = '';
+    setDashboardModeLabel('Hardware Ready');
+  } else {
     const nextSerialSource = new SerialDataSource(onData);
     const connected = await nextSerialSource.start();
     if (!connected) return;
-
     serialSource = nextSerialSource;
-    document.getElementById('connectBtn').textContent = "Connected";
-    document.getElementById('connectBtn').style.background = "var(--motor-blue-light)";
-    document.getElementById('connectBtn').style.color = "white";
+    btn.textContent = 'Disconnect';
+    btn.style.background = 'var(--motor-blue-light)';
+    btn.style.color = 'white';
   }
 });
 
