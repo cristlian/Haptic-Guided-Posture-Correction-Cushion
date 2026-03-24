@@ -1315,8 +1315,8 @@ const LIVE_FSR_BLEED_MATRIX = Object.freeze([
   Object.freeze([0.08, 0.00, 0.08, 0.70, 0.08, 0.00, 0.06, 0.00]), // Thigh-Right
   Object.freeze([0.00, 0.08, 0.00, 0.08, 0.70, 0.08, 0.00, 0.06]), // Thigh-Left
   Object.freeze([0.00, 0.10, 0.00, 0.00, 0.10, 0.70, 0.00, 0.10]), // Hip-Left
-  Object.freeze([0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 0.00]), // Front-Right
-  Object.freeze([0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00])  // Front-Left
+  Object.freeze([0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.30, 0.00]), // Front-Right
+  Object.freeze([0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.30])  // Front-Left
 ]);
 
 function clamp(value, min, max) {
@@ -1553,12 +1553,13 @@ if (typeof globalThis !== 'undefined') {
    鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?*/
 
 const POSTURE_PROTOTYPES = Object.freeze([
-  { id: 'lean_left',    label: 'Lean Left',      vec: [0.05, 0.90, 0.05, 0.05, 0.55, 0.75, 0.05, 0.05] },
-  { id: 'lean_right',   label: 'Lean Right',     vec: [0.90, 0.05, 0.75, 0.55, 0.05, 0.05, 0.05, 0.05] },
-  { id: 'lean_forward', label: 'Lean Forward',   vec: [0.05, 0.05, 0.38, 0.38, 0.38, 0.38, 0.90, 0.90] },
-  { id: 'lean_back',    label: 'Lean Back',      vec: [0.90, 0.90, 0.55, 0.38, 0.38, 0.55, 0.05, 0.05] },
-  { id: 'cross_right',  label: 'Cross-leg \u00b7 R', vec: [0.05, 0.55, 0.05, 0.05, 0.90, 0.90, 0.05, 0.55] },
-  { id: 'cross_left',   label: 'Cross-leg \u00b7 L', vec: [0.55, 0.05, 0.90, 0.90, 0.05, 0.05, 0.55, 0.05] }
+  //                                                       B-R , B-L , H-R , T-R , T-L , H-L , F-R , F-L
+  { id: 'lean_left',    label: 'Lean Left',          vec: [0.05, 0.90, 0.05, 0.05, 0.55, 0.75, 0.05, 0.05] },
+  { id: 'lean_right',   label: 'Lean Right',         vec: [0.90, 0.05, 0.75, 0.55, 0.05, 0.05, 0.05, 0.05] },
+  { id: 'lean_forward', label: 'Lean Forward',       vec: [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 1.00] },
+  { id: 'lean_back',    label: 'Lean Back',          vec: [0.90, 0.90, 0.55, 0.38, 0.38, 0.55, 0.05, 0.05] },
+  { id: 'cross_right',  label: 'Cross-leg \u00b7 R', vec: [0,0,0,0,0,0,0,0] },
+  { id: 'cross_left',   label: 'Cross-leg \u00b7 L', vec: [0,0,0,0,0,0,0,0.01] }
 ]);
 
 // Confidence thresholds derived from inter-prototype cosine similarity analysis.
