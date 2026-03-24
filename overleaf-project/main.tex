@@ -210,27 +210,31 @@ On the underside, the structure mainly serves reliability and mechanical stabili
 %%%%%%%%%%%%%% 【软件】 %%%%%%%%%%%%%%%%%
 \subsection{Software Development}
 
-The software subsystem was implemented as a single self-contained HTML file using standard web technologies (HTML, CSS, and JavaScript) without external libraries or frameworks. Real-time data acquisition relies on the Web Serial API, which reads the Arduino serial output at 9600 baud directly within the browser, eliminating the need for server-side infrastructure.
+The software subsystem was implemented as a single self-contained HTML file in HTML, CSS, and JavaScript. Real-time data acquisition uses the Web Serial API to read the Arduino serial output at 9600 baud directly within the browser, avoiding server-side infrastructure.
 
-Incoming serial frames---eight comma-separated FSR readings transmitted at approximately 30\,ms intervals---undergo a three-stage signal conditioning pipeline. First, raw channel indices are remapped to anatomical zone positions on the cushion. Second, adaptive normalisation applies rolling calibration over a 48-frame history window with percentile-based floor and ceiling estimation and a gain exponent of 0.58 to enhance pressure contrast; an idle-detection mechanism resets the calibration state when the seat is unoccupied. Third, a spatial bleed matrix simulates pressure diffusion between neighbouring zones, yielding a more visually coherent heatmap.
+Incoming serial frames---eight comma-separated FSR readings transmitted at approximately 30\,ms intervals---pass through three conditioning stages: channel remapping to anatomical zone positions, adaptive normalisation over a 48-frame rolling history with idle reset and a gain exponent of 0.58, and spatial spreading that yields a more coherent heatmap.
 
-Posture classification computes cosine similarity between the normalised FSR vector and six predefined prototype vectors representing lean-left, lean-right, lean-forward, lean-back, and two cross-leg configurations. Exponential moving average smoothing with a five-tick label persistence requirement suppresses transient misclassifications. Confident predictions are mapped to motor activation patterns via a predefined routing table.
+Posture classification compares the normalised FSR vector against six predefined posture prototypes using cosine similarity. Exponential moving average smoothing with a five-tick persistence requirement suppresses transient misclassifications, and confident predictions are mapped to predefined motor-routing patterns.
 
-The front-end renders an SVG-based pressure heatmap with a six-level colour scale, per-zone sparkline charts, a 30-second pressure timeline, and an articulated silhouette that reflects predicted posture through lightweight 2D affine transforms applied to SVG sub-groups (Figure~\ref{fig:prototype}). Frame-to-frame interpolation provides visual smoothness, while sidebar statistics update directly from each incoming packet to minimise perceived latency. A software-only demo session mode enables full functional verification without connected hardware. The most interface-specific software elements are shown in Figure~\ref{fig:dashboard_ui_details}, which highlights the pressure-zone cards, posture display, and motor-status panels referenced in this section.
+The front-end renders an SVG pressure heatmap, zone sparklines, a 30-second timeline, and an articulated silhouette driven by lightweight 2D affine transforms (Figure~\ref{fig:prototype}). Frame interpolation smooths the heatmap, while sidebar statistics update from each incoming packet to minimise perceived latency. A software-only demo mode enables full functional verification without connected hardware. Figure~\ref{fig:dashboard_ui} summarises the final interface.
 
 \begin{figure}[H]
     \centering
-    \begin{minipage}[t]{0.34\textwidth}
+    \includegraphics[width=0.84\textwidth]{dashboard_overview.png}
+
+    \vspace{0.5em}
+
+    \begin{minipage}[t]{0.28\textwidth}
         \centering
         \includegraphics[width=\linewidth]{dashboard_zones.png}
     \end{minipage}
     \hfill
-    \begin{minipage}[t]{0.34\textwidth}
+    \begin{minipage}[t]{0.28\textwidth}
         \centering
         \includegraphics[width=\linewidth]{dashboard_posture.png}
     \end{minipage}
-    \caption{Detail views of the browser dashboard showing the zone cards with sparklines (left) and the posture and motor-status panels (right).}
-    \label{fig:dashboard_ui_details}
+    \caption{Browser dashboard used during software testing and demonstration. The full interface is shown above, with zoomed views of the pressure-zone cards and sparklines (bottom left) and the posture and motor-status panels (bottom right).}
+    \label{fig:dashboard_ui}
 \end{figure}
 
 
@@ -296,7 +300,7 @@ The current limitations of HAPSeat can be grouped into three main areas: vibrota
 
 \section{Conclusion}
 
-This report presented HAPSeat, a multimodal posture support cushion that integrates force-sensitive resistor sensing, real-time browser-based visualisation, and vibrotactile feedback. The prototype demonstrated that an eight-sensor array, combined with adaptive signal conditioning and cosine-similarity-based posture classification, can reliably detect major postural deviations during seated work. The visual heatmap interface proved effective for real-time posture awareness, while the vibrotactile channel, though perceivable, provided limited directional precision. Future development should prioritise higher-resolution sensing, alternative actuator technologies, and user-adaptive calibration to advance the system from a monitoring tool toward a fully directive haptic guidance device.
+This report presented HAPSeat, a multimodal posture support cushion integrating force-sensitive resistor sensing, browser-based visualisation, and vibrotactile feedback. The prototype showed that an eight-sensor array with adaptive conditioning and cosine-similarity posture classification can detect major postural deviations during seated work. The visual heatmap supported clear posture awareness, while vibrotactile cues remained perceivable but not yet directionally precise. Future work should prioritise higher-resolution sensing, alternative actuators, and user-adaptive calibration to move from monitoring toward directive haptic guidance.
 
 %%%%%%%%%%%%%% 【文献】 %%%%%%%%%%%%%%%%%
 % 参考文献-------------------------------------
